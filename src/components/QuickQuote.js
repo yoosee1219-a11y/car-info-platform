@@ -7,7 +7,7 @@ function QuickQuote() {
     { icon: "👨‍👩‍👧‍👦", title: "가족보험", desc: "온가족 보장" },
     { icon: "🏢", title: "암보험", desc: "든든한 보장" },
     { icon: "🏠", title: "주택화재", desc: "내집 지키기" },
-    { icon: "👶", title: "어린이보험", desc: "우리 아이 보장" },
+    { icon: "👶", title: "어린이보험(태아보험)", desc: "태아부터 성인까지 보장" },
     { icon: "🐶", title: "펫보험", desc: "반려동물 보장" },
     { icon: "🚘", title: "운전자보험", desc: "운전자 보호" },
   ];
