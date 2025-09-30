@@ -39,6 +39,17 @@
   background: #3b82f6;
 }
 
+.menu-item.logout-item {
+  margin-top: auto;
+  border-top: 1px solid #374151;
+  color: #f87171;
+}
+
+.menu-item.logout-item:hover {
+  background: #7f1d1d;
+  color: white;
+}
+
 /* 메인 콘텐츠 */
 .main-content {
   flex: 1;
@@ -52,7 +63,7 @@
   padding: 1.5rem;
   border-radius: 12px;
   margin-bottom: 2rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .content-header h1 {
@@ -77,7 +88,7 @@
   background: white;
   padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .stat-card h3 {
@@ -103,7 +114,7 @@
   background: white;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .editor-section h2 {
@@ -116,7 +127,7 @@
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .list-header {
@@ -231,11 +242,11 @@
   .sidebar {
     width: 200px;
   }
-  
+
   .main-content {
     margin-left: 200px;
   }
-  
+
   .stats-grid {
     grid-template-columns: 1fr;
   }
