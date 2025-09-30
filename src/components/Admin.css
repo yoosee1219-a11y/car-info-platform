@@ -194,12 +194,44 @@
   color: #3b82f6;
 }
 
+.action-btn.edit:hover {
+  background: #eff6ff;
+}
+
 .action-btn.delete {
   color: #ef4444;
 }
 
 .action-btn.delete:hover {
   background: #fee2e2;
+}
+
+/* 수정 모드 알림 */
+.edit-notice {
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #92400e;
+  font-weight: 500;
+}
+
+.btn-cancel-edit {
+  padding: 0.5rem 1rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-cancel-edit:hover {
+  background: #dc2626;
 }
 
 /* 버튼 그룹 */
@@ -235,6 +267,16 @@
 
 .btn-secondary:hover {
   background: #4b5563;
+}
+
+/* 본문 내용 textarea 스타일 */
+.content-textarea {
+  font-size: 1rem;
+  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  resize: vertical;
+  min-height: 300px;
 }
 
 /* 반응형 */

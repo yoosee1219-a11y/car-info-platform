@@ -12,6 +12,7 @@ import ComparisonSection from "./components/ComparisonSection";
 import ConsultationSection from "./components/ConsultationSection";
 import Footer from "./components/Footer";
 import AdminWrapper from "./components/AdminWrapper";
+import PostDetail from "./components/PostDetail";
 
 // 메인 페이지 컴포넌트
 function MainPage() {
@@ -81,6 +82,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<MainPage />} />
+          <Route path="/post/:id" element={<PostDetail />} />
           <Route path="/admin" element={<AdminWrapper />} />
         </Routes>
       </div>

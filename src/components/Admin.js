@@ -8,11 +8,11 @@ function Admin({ onLogout }) {
   const [posts, setPosts] = useState([]);
   const [consultations, setConsultations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingId, setEditingId] = useState(null);
 
   const [formData, setFormData] = useState({
     title: "",
     category: "자동차보험 가이드",
-    summary: "",
     content: "",
     is_published: false,
   });
@@ -57,24 +57,68 @@ function Admin({ onLogout }) {
     e.preventDefault();
 
     try {
-      const { error } = await supabase.from("posts").insert([formData]);
+      if (editingId) {
+        // 수정 모드
+        const { error } = await supabase
+          .from("posts")
+          .update(formData)
+          .eq("id", editingId);
 
-      if (error) {
-        alert("게시글 등록 실패: " + error.message);
+        if (error) {
+          alert("게시글 수정 실패: " + error.message);
+        } else {
+          alert("게시글이 성공적으로 수정되었습니다!");
+          setEditingId(null);
+          setFormData({
+            title: "",
+            category: "자동차보험 가이드",
+            content: "",
+            is_published: false,
+          });
+          fetchData();
+        }
       } else {
-        alert("게시글이 성공적으로 등록되었습니다!");
-        setFormData({
-          title: "",
-          category: "자동차보험 가이드",
-          summary: "",
-          content: "",
-          is_published: false,
-        });
-        fetchData();
+        // 새 게시글 작성 모드
+        const { error } = await supabase.from("posts").insert([formData]);
+
+        if (error) {
+          alert("게시글 등록 실패: " + error.message);
+        } else {
+          alert("게시글이 성공적으로 등록되었습니다!");
+          setFormData({
+            title: "",
+            category: "자동차보험 가이드",
+            content: "",
+            is_published: false,
+          });
+          fetchData();
+        }
       }
     } catch (error) {
       alert("오류가 발생했습니다: " + error.message);
     }
+  };
+
+  const handleEdit = (post) => {
+    setEditingId(post.id);
+    setFormData({
+      title: post.title,
+      category: post.category,
+      content: post.content,
+      is_published: post.is_published,
+    });
+    // 폼으로 스크롤
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setFormData({
+      title: "",
+      category: "자동차보험 가이드",
+      content: "",
+      is_published: false,
+    });
   };
 
   const handleDelete = async (id) => {
@@ -196,7 +240,21 @@ function Admin({ onLogout }) {
             </div>
 
             <div className="editor-section">
-              <h2>새 보험 정보 글 작성</h2>
+              <h2>
+                {editingId ? "📝 보험 정보 글 수정" : "✍️ 새 보험 정보 글 작성"}
+              </h2>
+              {editingId && (
+                <div className="edit-notice">
+                  게시글을 수정하고 있습니다.{" "}
+                  <button
+                    type="button"
+                    onClick={handleCancelEdit}
+                    className="btn-cancel-edit"
+                  >
+                    취소
+                  </button>
+                </div>
+              )}
 
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
@@ -228,24 +286,14 @@ function Admin({ onLogout }) {
                 </div>
 
                 <div className="form-group">
-                  <label>요약 설명</label>
-                  <input
-                    type="text"
-                    name="summary"
-                    value={formData.summary}
-                    onChange={handleFormChange}
-                    placeholder="검색 결과에 표시될 간단한 설명을 입력하세요"
-                  />
-                </div>
-
-                <div className="form-group">
                   <label>본문 내용</label>
                   <textarea
                     name="content"
                     value={formData.content}
                     onChange={handleFormChange}
+                    className="content-textarea"
                     placeholder="본문 내용을 입력하세요..."
-                    rows="10"
+                    rows="15"
                     required
                   />
                 </div>
@@ -264,23 +312,32 @@ function Admin({ onLogout }) {
 
                 <div className="btn-group">
                   <button type="submit" className="btn btn-primary">
-                    게시하기
+                    {editingId ? "수정하기" : "게시하기"}
                   </button>
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={() =>
-                      setFormData({
-                        title: "",
-                        category: "자동차보험 가이드",
-                        summary: "",
-                        content: "",
-                        is_published: false,
-                      })
-                    }
-                  >
-                    초기화
-                  </button>
+                  {editingId ? (
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={handleCancelEdit}
+                    >
+                      취소
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() =>
+                        setFormData({
+                          title: "",
+                          category: "자동차보험 가이드",
+                          content: "",
+                          is_published: false,
+                        })
+                      }
+                    >
+                      초기화
+                    </button>
+                  )}
                 </div>
               </form>
             </div>
@@ -328,6 +385,12 @@ function Admin({ onLogout }) {
                       </div>
                     </div>
                     <div className="item-actions">
+                      <button
+                        className="action-btn edit"
+                        onClick={() => handleEdit(post)}
+                      >
+                        수정
+                      </button>
                       <button
                         className="action-btn delete"
                         onClick={() => handleDelete(post.id)}
