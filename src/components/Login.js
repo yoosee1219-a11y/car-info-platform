@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import bcrypt from "bcryptjs";
+import { supabase } from "../supabaseClient";
 import "./Login.css";
 
 function Login({ onLoginSuccess }) {
@@ -8,29 +9,36 @@ function Login({ onLoginSuccess }) {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // 보안: 비밀번호는 해시화되어 저장 (실제 비밀번호: dbsdudgns0))
-  // bcrypt로 생성된 해시값
-  const ADMIN_USERNAME = "stryper11";
-  const ADMIN_PASSWORD_HASH =
-    "$2b$10$i/bbAAfAqrI5K./hKI13COuLm0QzgA3uqC8Lt2LnuHHwa9PZxHBki"; // dbsdudgns0) 의 해시
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
     try {
-      // 사용자명 확인
-      if (username !== ADMIN_USERNAME) {
+      // 1. 입력값 검증
+      if (!username || !password) {
+        setError("아이디와 비밀번호를 모두 입력해주세요.");
+        setIsLoading(false);
+        return;
+      }
+
+      // 2. Supabase에서 관리자 정보 가져오기
+      const { data: adminData, error: fetchError } = await supabase
+        .from("admin_users")
+        .select("username, password_hash")
+        .eq("username", username)
+        .single();
+
+      if (fetchError || !adminData) {
         setError("아이디 또는 비밀번호가 올바르지 않습니다.");
         setIsLoading(false);
         return;
       }
 
-      // 비밀번호 확인 (해시 비교)
+      // 3. 비밀번호 확인 (해시 비교)
       const isPasswordValid = await bcrypt.compare(
         password,
-        ADMIN_PASSWORD_HASH
+        adminData.password_hash
       );
 
       if (!isPasswordValid) {
@@ -39,11 +47,11 @@ function Login({ onLoginSuccess }) {
         return;
       }
 
-      // 로그인 성공
-      // 안전한 토큰 생성 (실제로는 서버에서 JWT를 생성하지만, 간단한 구현)
-      const loginToken = btoa(`${ADMIN_USERNAME}:${Date.now()}`);
+      // 4. 로그인 성공
+      // 안전한 토큰 생성
+      const loginToken = btoa(`${username}:${Date.now()}`);
       sessionStorage.setItem("adminToken", loginToken);
-      sessionStorage.setItem("adminUser", ADMIN_USERNAME);
+      sessionStorage.setItem("adminUser", username);
 
       onLoginSuccess();
     } catch (error) {

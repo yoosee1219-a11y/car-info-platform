@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
+import PasswordChange from "./PasswordChange";
 import "./Admin.css";
 
 function Admin({ onLogout }) {
@@ -134,6 +135,12 @@ function Admin({ onLogout }) {
           onClick={() => setActiveTab("consultations")}
         >
           <span>💬</span> 상담 문의
+        </div>
+        <div
+          className={`menu-item ${activeTab === "password" ? "active" : ""}`}
+          onClick={() => setActiveTab("password")}
+        >
+          <span>🔐</span> 비밀번호 변경
         </div>
         <div className="menu-item" onClick={() => (window.location.href = "/")}>
           <span>🏠</span> 메인으로
@@ -415,6 +422,8 @@ function Admin({ onLogout }) {
             </div>
           </>
         )}
+
+        {activeTab === "password" && <PasswordChange />}
       </main>
     </div>
   );

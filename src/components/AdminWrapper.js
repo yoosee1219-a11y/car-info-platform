@@ -16,7 +16,7 @@ function AdminWrapper() {
     const user = sessionStorage.getItem("adminUser");
 
     // 토큰과 사용자 정보가 있으면 로그인 상태로 간주
-    if (token && user === "stryper11") {
+    if (token && user) {
       setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
