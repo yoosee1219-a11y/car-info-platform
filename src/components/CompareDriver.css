@@ -1,0 +1,394 @@
+.compare-driver-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+  padding-bottom: 60px;
+}
+
+/* Hero Section */
+.compare-hero {
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  color: white;
+  padding: 80px 20px 60px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.compare-hero-content h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.compare-hero-content p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Container */
+.compare-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* Filter Section */
+.filter-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.filter-group {
+  margin-bottom: 24px;
+}
+
+.filter-group:last-child {
+  margin-bottom: 0;
+}
+
+.filter-group h3 {
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+  color: #1f2937;
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filter-chip {
+  padding: 10px 20px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.filter-chip:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+.filter-chip.active {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #3b82f6;
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+/* Comparison Grid */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+/* Insurance Card */
+.insurance-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.insurance-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  padding: 24px;
+  border-top: 4px solid;
+  background: linear-gradient(to bottom, #f9fafb, white);
+}
+
+.company-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.company-logo {
+  font-size: 2.5rem;
+}
+
+.company-info h2 {
+  font-size: 1.5rem;
+  color: #1f2937;
+  margin: 0;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stars {
+  font-size: 1rem;
+}
+
+.rating-text {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* Coverage Section */
+.coverage-section {
+  padding: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.coverage-section h3,
+.specialty-section h3,
+.discount-section h3 {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  color: #1f2937;
+}
+
+.coverage-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.coverage-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.coverage-list li:last-child {
+  border-bottom: none;
+}
+
+.coverage-name {
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+.coverage-amount {
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Specialty Section */
+.specialty-section {
+  padding: 24px;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+}
+
+.specialty-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.specialty-list li {
+  padding: 8px 0;
+  padding-left: 24px;
+  position: relative;
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+.specialty-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #10b981;
+  font-weight: 700;
+}
+
+/* Discount Section */
+.discount-section {
+  padding: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.discount-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.discount-tag {
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Consult Button */
+.consult-button {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 24px;
+}
+
+.consult-button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Info Notice */
+.info-notice {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.info-notice h3 {
+  font-size: 1.5rem;
+  margin-bottom: 24px;
+  color: #1f2937;
+  text-align: center;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.info-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.info-item strong {
+  display: block;
+  color: #1f2937;
+  margin-bottom: 4px;
+  font-size: 1rem;
+}
+
+.info-item p {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* CTA Section */
+.cta-section {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-radius: 16px;
+  padding: 60px 40px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.cta-section h2 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.cta-section p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+.cta-button {
+  background: white;
+  color: #3b82f6;
+  border: none;
+  padding: 18px 48px;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.cta-benefits {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.cta-benefits span {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .compare-hero-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .compare-hero-content p {
+    font-size: 1rem;
+  }
+
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-section {
+    padding: 20px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-section {
+    padding: 40px 20px;
+  }
+
+  .cta-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .cta-benefits {
+    flex-direction: column;
+    gap: 12px;
+  }
+}

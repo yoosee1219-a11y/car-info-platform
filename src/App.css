@@ -127,14 +127,23 @@ nav {
   border: 2px solid transparent;
   border-radius: 12px;
   text-align: center;
-  cursor: pointer;
+  cursor: default;
   transition: all 0.3s;
 }
 
-.quote-option:hover {
+.quote-option.clickable {
+  cursor: pointer;
+}
+
+.quote-option.clickable:hover {
   border-color: #2563eb;
   background: #eff6ff;
   transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.quote-option:hover {
+  opacity: 0.9;
 }
 
 .quote-option i {
