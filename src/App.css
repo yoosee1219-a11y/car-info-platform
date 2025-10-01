@@ -153,6 +153,71 @@ nav {
   display: block;
 }
 
+/* 찜하기 버튼 스타일 */
+.favorite-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  border: 2px solid #f0f0f0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.favorite-btn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #ff6b6b;
+}
+
+.favorite-btn:active {
+  transform: scale(0.95);
+}
+
+.favorite-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.favorite-btn.favorited {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  border-color: #ff6b6b;
+  animation: heartBeat 0.4s ease;
+}
+
+.favorite-btn.favorited:hover {
+  background: linear-gradient(135deg, #ff5252 0%, #e04856 100%);
+  border-color: #ff5252;
+}
+
+@keyframes heartBeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.25);
+  }
+  30% {
+    transform: scale(1.1);
+  }
+  45% {
+    transform: scale(1.2);
+  }
+  60% {
+    transform: scale(1.15);
+  }
+}
+
 /* 정보 섹션 */
 .info-section {
   padding: 4rem 2rem;
