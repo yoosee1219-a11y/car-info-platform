@@ -218,7 +218,8 @@ const CompareAuto = () => {
       number: "03",
       title: "Fast",
       subtitle: "가입부터 보상까지,\n빠르게 처리됩니다.",
-      description: "복잡한 절차 없이 빠르고 간편하게, 응급 상황에도 즉시 대응합니다.",
+      description:
+        "복잡한 절차 없이 빠르고 간편하게, 응급 상황에도 즉시 대응합니다.",
       gradient: "linear-gradient(135deg, #FF9966 0%, #FF5E62 100%)",
     },
   ];
@@ -502,7 +503,9 @@ const CompareAuto = () => {
                 <button className="faq-question" onClick={() => toggleFaq(idx)}>
                   <span className="faq-q">Q</span>
                   <span className="faq-text">{faq.question}</span>
-                  <span className="faq-arrow">{openFaq === idx ? "▲" : "▼"}</span>
+                  <span className="faq-arrow">
+                    {openFaq === idx ? "▲" : "▼"}
+                  </span>
                 </button>
                 {openFaq === idx && (
                   <div className="faq-answer">
@@ -513,19 +516,6 @@ const CompareAuto = () => {
             ))}
           </div>
         </section>
-
-        {/* CTA Banner */}
-        <div className="cta-banner">
-          <h2>보험이지로 똑똑하게!</h2>
-          <p>
-            보험이지 한 곳에서
-            <br />
-            보험사 별 할인 특약까지 확인해보세요.
-          </p>
-          <button className="cta-banner-button" onClick={scrollToConsultation}>
-            바로 상담하기 →
-          </button>
-        </div>
 
         {/* CTA Section */}
         <div className="cta-section">

@@ -6,7 +6,7 @@
 
 /* Hero Section */
 .compare-hero {
-  background: linear-gradient(135deg, #FFF4E6 0%, #FFE5CC 100%);
+  background: linear-gradient(135deg, #fff4e6 0%, #ffe5cc 100%);
   color: #1f2937;
   padding: 80px 20px 100px;
   text-align: center;
@@ -16,7 +16,7 @@
 }
 
 .hero-label {
-  color: #FF9966;
+  color: #ff9966;
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 12px;
@@ -35,7 +35,7 @@
   font-size: 2.8rem;
   font-weight: 700;
   margin: 0 0 40px 0;
-  color: #FF9966;
+  color: #ff9966;
 }
 
 .hero-car-illustration {
@@ -120,6 +120,8 @@
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 30px;
   margin-bottom: 40px;
+  justify-content: center;
+  align-items: stretch;
 }
 
 /* Insurance Card */
@@ -129,6 +131,9 @@
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .insurance-card:hover {
@@ -274,6 +279,7 @@
 /* Discount Section */
 .discount-section {
   padding: 24px;
+  flex-grow: 1;
 }
 
 .discount-tags {
@@ -293,7 +299,7 @@
 
 /* Consult Button */
 .consult-button {
-  width: 100%;
+  width: calc(100% - 48px);
   padding: 16px;
   border: none;
   border-radius: 12px;
@@ -302,7 +308,8 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 24px;
+  margin: 0 24px 24px 24px;
+  align-self: center;
 }
 
 .consult-button:hover {
@@ -418,7 +425,7 @@
 }
 
 .section-label {
-  color: #FF9966;
+  color: #ff9966;
   font-size: 1.2rem;
   font-weight: 600;
   text-transform: capitalize;
@@ -484,7 +491,7 @@
 }
 
 .rider-item {
-  background: #F9FAFB;
+  background: #f9fafb;
   border-radius: 50%;
   width: 150px;
   height: 150px;
@@ -498,7 +505,7 @@
 }
 
 .rider-item:hover {
-  background: #FFF4E6;
+  background: #fff4e6;
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(255, 153, 102, 0.2);
 }
@@ -538,7 +545,7 @@
 }
 
 .step-card:hover {
-  border-color: #FF9966;
+  border-color: #ff9966;
   transform: translateY(-5px);
   box-shadow: 0 8px 24px rgba(255, 153, 102, 0.2);
 }
@@ -553,7 +560,7 @@
 }
 
 .step-label {
-  color: #FF9966;
+  color: #ff9966;
   font-size: 0.9rem;
   font-weight: 600;
   display: block;
@@ -577,7 +584,7 @@
 /* Review Section - 고객 후기 */
 .review-section {
   margin-bottom: 80px;
-  background: #FFF4E6;
+  background: #fff4e6;
   padding: 60px 40px;
   border-radius: 24px;
 }
@@ -611,7 +618,7 @@
 .review-avatar {
   width: 50px;
   height: 50px;
-  background: #F3F4F6;
+  background: #f3f4f6;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -688,11 +695,11 @@
 }
 
 .faq-question:hover {
-  background: #FFF4E6;
+  background: #fff4e6;
 }
 
 .faq-q {
-  color: #FF9966;
+  color: #ff9966;
   font-size: 1.2rem;
   font-weight: 700;
   flex-shrink: 0;
@@ -706,7 +713,7 @@
 }
 
 .faq-arrow {
-  color: #FF9966;
+  color: #ff9966;
   font-size: 0.9rem;
   flex-shrink: 0;
   transition: transform 0.3s ease;
@@ -717,7 +724,7 @@
   color: #4b5563;
   font-size: 0.95rem;
   line-height: 1.7;
-  background: #FFF9F5;
+  background: #fff9f5;
   animation: slideDown 0.3s ease;
 }
 
@@ -733,14 +740,14 @@
 }
 
 .faq-a {
-  color: #FF9966;
+  color: #ff9966;
   font-weight: 700;
   margin-right: 8px;
 }
 
 /* CTA Banner */
 .cta-banner {
-  background: linear-gradient(135deg, #FFF4E6 0%, #FFE5CC 100%);
+  background: linear-gradient(135deg, #fff4e6 0%, #ffe5cc 100%);
   border-radius: 24px;
   padding: 80px 40px;
   text-align: center;
@@ -774,7 +781,7 @@
 }
 
 .cta-banner-button {
-  background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
+  background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%);
   color: white;
   border: none;
   padding: 18px 48px;
