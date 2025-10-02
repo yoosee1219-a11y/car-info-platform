@@ -33,9 +33,9 @@ function MainPage() {
     <>
       <Header />
       <Hero />
-      <PopularPosts />
       <QuickQuote />
       <InfoSection posts={posts} loading={loading} />
+      <PopularPosts />
       <ComparisonSection />
       <ConsultationSection onSubmit={submitConsultation} />
       <Footer />
