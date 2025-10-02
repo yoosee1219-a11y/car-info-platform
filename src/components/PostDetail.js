@@ -248,8 +248,8 @@ function PostDetail() {
             </div>
           </main>
 
-          {/* 광고 사이드바 */}
-          <AdSidebar />
+          {/* 광고 사이드바 - AdSense 승인 대기 중 임시 비활성화 */}
+          {/* <AdSidebar /> */}
         </div>
       </div>
       <Footer />
