@@ -774,7 +774,9 @@ function Admin({ onLogout }) {
                         alignItems: "center",
                         gap: "0.75rem",
                         padding: "0.75rem 1rem",
-                        background: formData.is_featured ? "#fef3c7" : "#f9fafb",
+                        background: formData.is_featured
+                          ? "#fef3c7"
+                          : "#f9fafb",
                         border: formData.is_featured
                           ? "2px solid #f59e0b"
                           : "2px solid #e5e7eb",
@@ -791,7 +793,9 @@ function Admin({ onLogout }) {
                         style={{ width: "20px", height: "20px" }}
                       />
                       <span style={{ fontWeight: 500 }}>
-                        {formData.is_featured ? "⭐ 인기글로 표시" : "인기글 설정"}
+                        {formData.is_featured
+                          ? "⭐ 인기글로 표시"
+                          : "인기글 설정"}
                       </span>
                     </label>
                     <small style={{ color: "#6b7280", fontSize: "0.85rem" }}>
@@ -801,15 +805,32 @@ function Admin({ onLogout }) {
                 </div>
 
                 <div className="form-group">
-                  <label>
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.75rem",
+                      padding: "0.75rem 1rem",
+                      background: "#f9fafb",
+                      border: "2px solid #e5e7eb",
+                      borderRadius: "8px",
+                      cursor: "pointer",
+                    }}
+                  >
                     <input
                       type="checkbox"
                       name="is_published"
                       checked={formData.is_published}
                       onChange={handleFormChange}
-                    />{" "}
-                    즉시 발행
+                      style={{ width: "20px", height: "20px", cursor: "pointer" }}
+                    />
+                    <span style={{ fontWeight: 500, fontSize: "1rem" }}>
+                      즉시 발행
+                    </span>
                   </label>
+                  <small style={{ color: "#6b7280", fontSize: "0.85rem", marginTop: "0.5rem", display: "block" }}>
+                    💡 체크하면 바로 발행되며, 해제하면 임시저장됩니다
+                  </small>
                 </div>
 
                 <div className="btn-group">
