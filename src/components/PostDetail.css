@@ -279,6 +279,33 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* 이미지 정렬 스타일 (Admin 에디터와 동일) */
+.post-body img.image-align-left,
+.post-body img[data-align="left"] {
+  float: left;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+  clear: left;
+  max-width: 50%;
+}
+
+.post-body img.image-align-center,
+.post-body img[data-align="center"] {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+}
+
+.post-body img.image-align-right,
+.post-body img[data-align="right"] {
+  float: right;
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+  clear: right;
+  max-width: 50%;
+}
+
 .post-body table {
   width: 100%;
   border-collapse: collapse;

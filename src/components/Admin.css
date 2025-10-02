@@ -116,14 +116,14 @@
   padding: 12px;
   border-radius: 6px;
   overflow-x: auto;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .tiptap-editor-content code {
   background: #f3f4f6;
   padding: 2px 4px;
   border-radius: 3px;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .tiptap-editor-content img {
@@ -160,6 +160,39 @@
 
 .tiptap-editor-content table tr:nth-child(even) {
   background: #f9fafb;
+}
+
+/* 이미지 정렬 스타일 */
+.tiptap-editor-content img.image-align-left,
+.tiptap-editor-content img[data-align="left"] {
+  float: left;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+  clear: left;
+}
+
+.tiptap-editor-content img.image-align-center,
+.tiptap-editor-content img[data-align="center"] {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+}
+
+.tiptap-editor-content img.image-align-right,
+.tiptap-editor-content img[data-align="right"] {
+  float: right;
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+  clear: right;
+}
+
+/* 이미지 선택 상태 */
+.tiptap-editor-content img.ProseMirror-selectednode {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 /* 사이드바 */

@@ -22,8 +22,95 @@ import {
 import { useAdmin } from "../hooks";
 import { imageUploadService } from "../services";
 
+// CustomImage Extension - 크기 및 정렬 속성 추가
+const CustomImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      src: {
+        default: null,
+      },
+      alt: {
+        default: null,
+      },
+      title: {
+        default: null,
+      },
+      width: {
+        default: null,
+        parseHTML: (element) => element.getAttribute("width"),
+        renderHTML: (attributes) => {
+          if (!attributes.width) return {};
+          return { width: attributes.width };
+        },
+      },
+      height: {
+        default: null,
+        parseHTML: (element) => element.getAttribute("height"),
+        renderHTML: (attributes) => {
+          if (!attributes.height) return {};
+          return { height: attributes.height };
+        },
+      },
+      align: {
+        default: "center",
+        parseHTML: (element) =>
+          element.getAttribute("data-align") || element.style.textAlign,
+        renderHTML: (attributes) => {
+          if (!attributes.align) return {};
+          return {
+            "data-align": attributes.align,
+            class: `image-align-${attributes.align}`,
+          };
+        },
+      },
+    };
+  },
+
+  addCommands() {
+    return {
+      ...this.parent?.(),
+      setImageSize:
+        (size) =>
+        ({ commands }) => {
+          return commands.updateAttributes("image", { width: size });
+        },
+      setImageAlign:
+        (align) =>
+        ({ commands }) => {
+          return commands.updateAttributes("image", { align });
+        },
+    };
+  },
+});
+
 // TipTap 툴바 컴포넌트
 const MenuBar = ({ editor }) => {
+  const [showImageControls, setShowImageControls] = useState(false);
+
+  // 이미지 선택 감지
+  useEffect(() => {
+    if (!editor) return;
+
+    const updateToolbar = () => {
+      const { selection } = editor.state;
+      const node = editor.state.doc.nodeAt(selection.from);
+      const isImageSelected =
+        node?.type.name === "image" || editor.isActive("image");
+      setShowImageControls(isImageSelected);
+    };
+
+    editor.on("selectionUpdate", updateToolbar);
+    editor.on("transaction", updateToolbar);
+
+    updateToolbar(); // 초기 상태 체크
+
+    return () => {
+      editor.off("selectionUpdate", updateToolbar);
+      editor.off("transaction", updateToolbar);
+    };
+  }, [editor]);
+
   if (!editor) {
     return null;
   }
@@ -220,6 +307,154 @@ const MenuBar = ({ editor }) => {
 
       <span className="toolbar-divider">|</span>
 
+      {/* 이미지 정렬 컨트롤 */}
+      {showImageControls && (
+        <>
+          <div
+            style={{
+              display: "inline-flex",
+              gap: "4px",
+              padding: "4px 8px",
+              background: "#e3f2fd",
+              borderRadius: "6px",
+              border: "1px solid #90caf9",
+            }}
+          >
+            <span
+              style={{ fontSize: "12px", color: "#1976d2", marginRight: "4px" }}
+            >
+              정렬:
+            </span>
+            <button
+              onClick={() => editor.chain().focus().setImageAlign("left").run()}
+              title="왼쪽 정렬"
+              style={{
+                padding: "4px 8px",
+                background: "white",
+                border: "1px solid #90caf9",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontSize: "14px",
+              }}
+            >
+              ⬅️
+            </button>
+            <button
+              onClick={() =>
+                editor.chain().focus().setImageAlign("center").run()
+              }
+              title="가운데 정렬"
+              style={{
+                padding: "4px 8px",
+                background: "white",
+                border: "1px solid #90caf9",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontSize: "14px",
+              }}
+            >
+              ⬆️
+            </button>
+            <button
+              onClick={() =>
+                editor.chain().focus().setImageAlign("right").run()
+              }
+              title="오른쪽 정렬"
+              style={{
+                padding: "4px 8px",
+                background: "white",
+                border: "1px solid #90caf9",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontSize: "14px",
+              }}
+            >
+              ➡️
+            </button>
+          </div>
+
+          <div
+            style={{
+              display: "inline-flex",
+              gap: "4px",
+              padding: "4px 8px",
+              background: "#f3e5f5",
+              borderRadius: "6px",
+              border: "1px solid #ce93d8",
+              marginLeft: "8px",
+            }}
+          >
+            <span
+              style={{ fontSize: "12px", color: "#7b1fa2", marginRight: "4px" }}
+            >
+              크기:
+            </span>
+            <button
+              onClick={() => editor.chain().focus().setImageSize("25%").run()}
+              title="25% 크기"
+              style={{
+                padding: "4px 8px",
+                background: "white",
+                border: "1px solid #ce93d8",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontSize: "12px",
+                fontWeight: "bold",
+              }}
+            >
+              S
+            </button>
+            <button
+              onClick={() => editor.chain().focus().setImageSize("50%").run()}
+              title="50% 크기"
+              style={{
+                padding: "4px 8px",
+                background: "white",
+                border: "1px solid #ce93d8",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontSize: "12px",
+                fontWeight: "bold",
+              }}
+            >
+              M
+            </button>
+            <button
+              onClick={() => editor.chain().focus().setImageSize("75%").run()}
+              title="75% 크기"
+              style={{
+                padding: "4px 8px",
+                background: "white",
+                border: "1px solid #ce93d8",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontSize: "12px",
+                fontWeight: "bold",
+              }}
+            >
+              L
+            </button>
+            <button
+              onClick={() => editor.chain().focus().setImageSize("100%").run()}
+              title="100% 크기"
+              style={{
+                padding: "4px 8px",
+                background: "white",
+                border: "1px solid #ce93d8",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontSize: "12px",
+                fontWeight: "bold",
+              }}
+            >
+              XL
+            </button>
+          </div>
+
+          <span className="toolbar-divider">|</span>
+        </>
+      )}
+
       {/* 표 */}
       <button
         onClick={() =>
@@ -290,7 +525,7 @@ function Admin({ onLogout }) {
           levels: [1, 2, 3, 4, 5, 6],
         },
       }),
-      Image.configure({
+      CustomImage.configure({
         HTMLAttributes: {
           class: "editor-image",
         },
