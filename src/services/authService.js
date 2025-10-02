@@ -10,6 +10,8 @@ import {
   createSuccessResult,
   checkSupabaseResponse,
 } from "../utils/errorHandler";
+import { validateUsername, validatePassword } from "../utils/validator";
+import { checkRateLimit, resetRateLimit } from "../utils/rateLimiter";
 import { AUTH_MESSAGES } from "../constants";
 
 export const authService = {
@@ -21,7 +23,16 @@ export const authService = {
    */
   login: async (username, password) => {
     try {
-      // 1. 입력값 검증
+      // 1. Rate Limiting 체크
+      const rateLimitResult = checkRateLimit("LOGIN");
+      if (!rateLimitResult.allowed) {
+        return {
+          success: false,
+          error: rateLimitResult.error,
+        };
+      }
+
+      // 2. 입력값 검증
       if (!username || !password) {
         return {
           success: false,
@@ -29,7 +40,25 @@ export const authService = {
         };
       }
 
-      // 2. Supabase에서 관리자 정보 가져오기
+      // 사용자명 검증
+      const usernameValidation = validateUsername(username);
+      if (!usernameValidation.valid) {
+        return {
+          success: false,
+          error: usernameValidation.error,
+        };
+      }
+
+      // 비밀번호 검증
+      const passwordValidation = validatePassword(password);
+      if (!passwordValidation.valid) {
+        return {
+          success: false,
+          error: passwordValidation.error,
+        };
+      }
+
+      // 3. Supabase에서 관리자 정보 가져오기
       const response = await supabase
         .from("admin_users")
         .select("username, password_hash")
@@ -43,7 +72,7 @@ export const authService = {
         };
       }
 
-      // 3. 비밀번호 확인 (해시 비교)
+      // 4. 비밀번호 확인 (해시 비교)
       const isPasswordValid = await bcrypt.compare(
         password,
         response.data.password_hash
@@ -56,8 +85,16 @@ export const authService = {
         };
       }
 
-      // 4. 로그인 성공 - 토큰 생성
-      const loginToken = btoa(`${username}:${Date.now()}`);
+      // 5. 로그인 성공 - 강력한 토큰 생성
+      const tokenData = {
+        username: username,
+        timestamp: Date.now(),
+        random: Math.random().toString(36).substring(2),
+      };
+      const loginToken = btoa(JSON.stringify(tokenData));
+
+      // 6. Rate Limit 초기화 (로그인 성공)
+      resetRateLimit("LOGIN");
 
       return createSuccessResult({
         token: loginToken,

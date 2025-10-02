@@ -7,6 +7,12 @@ import { useState, useEffect, useCallback } from "react";
 import bcrypt from "bcryptjs";
 import { commentService } from "../services";
 import { COMMENT_FORM_DEFAULTS, COMMENT_MESSAGES } from "../constants";
+import {
+  validateName,
+  validatePassword,
+  validateCommentContent,
+  checkRateLimit,
+} from "../utils";
 
 export function useComments(postId) {
   const [comments, setComments] = useState([]);
@@ -47,6 +53,14 @@ export function useComments(postId) {
     async (e) => {
       e.preventDefault();
 
+      // 1. Rate Limiting 체크
+      const rateLimitResult = checkRateLimit("COMMENT");
+      if (!rateLimitResult.allowed) {
+        alert(rateLimitResult.error);
+        return;
+      }
+
+      // 2. 필수 입력 체크
       if (
         !formData.author_name ||
         !formData.author_password ||
@@ -56,16 +70,37 @@ export function useComments(postId) {
         return;
       }
 
-      // 비밀번호 해싱
+      // 3. 입력값 검증
+      const nameValidation = validateName(formData.author_name);
+      if (!nameValidation.valid) {
+        alert(nameValidation.error);
+        return;
+      }
+
+      const passwordValidation = validatePassword(formData.author_password);
+      if (!passwordValidation.valid) {
+        alert(passwordValidation.error);
+        return;
+      }
+
+      const contentValidation = validateCommentContent(formData.content);
+      if (!contentValidation.valid) {
+        alert(contentValidation.error);
+        return;
+      }
+
+      // 4. 비밀번호 해싱
       const hashedPassword = await bcrypt.hash(formData.author_password, 10);
 
+      // 5. 댓글 데이터 생성
       const commentData = {
         post_id: postId,
-        author_name: formData.author_name,
+        author_name: formData.author_name.trim(),
         author_password: hashedPassword,
-        content: formData.content,
+        content: formData.content.trim(),
       };
 
+      // 6. 댓글 저장
       const result = await commentService.create(commentData);
 
       if (result.success) {
@@ -84,13 +119,21 @@ export function useComments(postId) {
     async (commentId, hashedPassword) => {
       const password = deletePassword[commentId];
 
+      // 1. 비밀번호 입력 확인
       if (!password) {
         alert(COMMENT_MESSAGES.PASSWORD_REQUIRED);
         return;
       }
 
+      // 2. 비밀번호 검증
+      const passwordValidation = validatePassword(password);
+      if (!passwordValidation.valid) {
+        alert(passwordValidation.error);
+        return;
+      }
+
       try {
-        // 비밀번호 확인
+        // 3. 비밀번호 일치 확인
         const isPasswordValid = await bcrypt.compare(password, hashedPassword);
 
         if (!isPasswordValid) {
@@ -98,8 +141,10 @@ export function useComments(postId) {
           return;
         }
 
+        // 4. 삭제 확인
         if (!window.confirm(COMMENT_MESSAGES.DELETE_CONFIRM)) return;
 
+        // 5. 댓글 삭제
         const result = await commentService.delete(commentId);
 
         if (result.success) {

@@ -18,6 +18,7 @@ import {
   getBreadcrumbSchema,
   getOrganizationSchema,
 } from "../utils/seoSchema";
+import { addRecentlyViewed } from "../utils/recentlyViewed";
 
 function PostDetail() {
   const { id } = useParams();
@@ -120,13 +121,23 @@ function PostDetail() {
     }
   }, [schemaData, post]);
 
-  // 페이지 진입시 최상단으로 스크롤
+  // 페이지 진입시 최상단으로 스크롤 및 최근 본 글 저장
   useEffect(() => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
-  }, [id]);
+
+    // 포스트 정보가 있으면 최근 본 글에 추가
+    if (post) {
+      addRecentlyViewed({
+        id: post.id,
+        title: post.title,
+        category: post.category,
+        created_at: post.created_at,
+      });
+    }
+  }, [id, post]);
 
   // 콘텐츠 처리 및 목차 추출
   useEffect(() => {

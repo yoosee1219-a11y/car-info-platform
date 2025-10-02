@@ -9,6 +9,8 @@ import {
   createSuccessResult,
   checkSupabaseResponse,
 } from "../utils/errorHandler";
+import { validateConsultationData } from "../utils/validator";
+import { checkRateLimit } from "../utils/rateLimiter";
 import { CONSULTATION_MESSAGES } from "../constants";
 
 export const consultationService = {
@@ -41,9 +43,36 @@ export const consultationService = {
    */
   create: async (consultationData) => {
     try {
-      const response = await supabase
-        .from("consultations")
-        .insert([consultationData]);
+      // 1. Rate Limiting 체크
+      const rateLimitResult = checkRateLimit("CONSULTATION");
+      if (!rateLimitResult.allowed) {
+        return {
+          success: false,
+          error: rateLimitResult.error,
+        };
+      }
+
+      // 2. 입력값 검증
+      const validation = validateConsultationData(consultationData);
+      if (!validation.valid) {
+        const errorMessages = Object.values(validation.errors).join("\n");
+        return {
+          success: false,
+          error: errorMessages,
+        };
+      }
+
+      // 3. 데이터 정제 (trim)
+      const cleanData = {
+        ...consultationData,
+        name: consultationData.name?.trim(),
+        phone: consultationData.phone?.trim(),
+        email: consultationData.email?.trim(),
+        message: consultationData.message?.trim(),
+      };
+
+      // 4. 상담 문의 저장
+      const response = await supabase.from("consultations").insert([cleanData]);
 
       checkSupabaseResponse(response, CONSULTATION_MESSAGES.CREATE_ERROR);
 

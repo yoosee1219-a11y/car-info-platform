@@ -7,6 +7,7 @@ import { usePosts, useConsultation } from "./hooks";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import PopularPosts from "./components/PopularPosts";
+import RecentlyViewedPosts from "./components/RecentlyViewedPosts";
 import QuickQuote from "./components/QuickQuote";
 import InfoSection from "./components/InfoSection";
 import ComparisonSection from "./components/ComparisonSection";
@@ -35,6 +36,7 @@ function MainPage() {
       <Hero />
       <QuickQuote />
       <InfoSection posts={posts} loading={loading} />
+      <RecentlyViewedPosts />
       <PopularPosts />
       <ComparisonSection />
       <ConsultationSection onSubmit={submitConsultation} />

@@ -1,0 +1,209 @@
+/* 최근 본 글 섹션 */
+.recently-viewed-section {
+  padding: 80px 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.recently-viewed-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.recently-viewed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.header-left {
+  flex: 1;
+}
+
+.recently-viewed-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.recently-viewed-subtitle {
+  font-size: 1rem;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.btn-clear-recent {
+  padding: 10px 20px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-clear-recent:hover {
+  background: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+.recently-viewed-list {
+  display: grid;
+  gap: 20px;
+}
+
+.recently-viewed-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.recently-viewed-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.recently-viewed-number {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
+.recently-viewed-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.recently-viewed-item-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.recently-viewed-category {
+  display: inline-block;
+  padding: 4px 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 12px;
+}
+
+.recently-viewed-time {
+  font-size: 0.85rem;
+  color: #3498db;
+  font-weight: 600;
+}
+
+.recently-viewed-item-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.5;
+}
+
+.recently-viewed-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: #7f8c8d;
+}
+
+.recently-viewed-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.recently-viewed-arrow {
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  color: #bdc3c7;
+  transition: all 0.3s ease;
+}
+
+.recently-viewed-item:hover .recently-viewed-arrow {
+  color: #667eea;
+  transform: translateX(5px);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .recently-viewed-section {
+    padding: 60px 16px;
+  }
+
+  .recently-viewed-title {
+    font-size: 1.5rem;
+  }
+
+  .recently-viewed-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .btn-clear-recent {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .recently-viewed-item {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .recently-viewed-number {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  .recently-viewed-item-title {
+    font-size: 1rem;
+  }
+
+  .recently-viewed-arrow {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .recently-viewed-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-clear-recent {
+    align-self: flex-end;
+  }
+}
