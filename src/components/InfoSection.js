@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { stripHtmlTags } from "../utils";
 
 function InfoSection({ posts, loading }) {
   // 샘플 데이터 (Supabase에 데이터가 없을 때)
@@ -67,15 +68,20 @@ function InfoSection({ posts, loading }) {
         </Link>
       </div>
       <div className="info-grid">
-        {displayPosts.map((post) => (
-          <Link to={`/post/${post.id}`} key={post.id} className="info-card">
-            <h3>{post.title}</h3>
-            <p>{post.summary || post.content?.substring(0, 100) + "..."}</p>
-            <div className="meta">
-              {post.category} | 조회 {post.view_count || 0}회
-            </div>
-          </Link>
-        ))}
+        {displayPosts.map((post) => {
+          // HTML 태그 제거하고 순수 텍스트만 추출
+          const excerpt = post.summary || stripHtmlTags(post.content, 100);
+          
+          return (
+            <Link to={`/post/${post.id}`} key={post.id} className="info-card">
+              <h3>{post.title}</h3>
+              <p>{excerpt}</p>
+              <div className="meta">
+                {post.category} | 조회 {post.view_count || 0}회
+              </div>
+            </Link>
+          );
+        })}
       </div>
       <div className="info-section-footer">
         <Link to="/posts" className="btn-view-all-large">

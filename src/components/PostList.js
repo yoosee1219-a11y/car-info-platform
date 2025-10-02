@@ -10,6 +10,7 @@ import Footer from "./Footer";
 import "./PostList.css";
 import { postService } from "../services";
 import { POST_CATEGORY_LIST } from "../constants";
+import { stripHtmlTags } from "../utils";
 
 function PostList() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -289,11 +290,7 @@ function PostList() {
                       <h2 className="post-title">{post.title}</h2>
 
                       <p className="post-excerpt">
-                        {post.content
-                          ? post.content
-                              .replace(/<[^>]*>/g, "")
-                              .substring(0, 100) + "..."
-                          : "내용 없음"}
+                        {stripHtmlTags(post.content, 120) || "내용 없음"}
                       </p>
 
                       <div className="post-card-footer">
