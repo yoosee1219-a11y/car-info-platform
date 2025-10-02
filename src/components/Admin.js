@@ -1,159 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { supabase } from "../supabaseClient";
+import React, { useState } from "react";
 import PasswordChange from "./PasswordChange";
 import "./Admin.css";
+import {
+  POST_CATEGORY_LIST,
+  POST_MESSAGES,
+  CONSULTATION_STATUS,
+  STATUS_COLORS,
+  STATUS_LABELS,
+} from "../constants";
+import { useAdmin } from "../hooks";
 
 function Admin({ onLogout }) {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [posts, setPosts] = useState([]);
-  const [consultations, setConsultations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [editingId, setEditingId] = useState(null);
 
-  const [formData, setFormData] = useState({
-    title: "",
-    category: "자동차보험 가이드",
-    content: "",
-    is_published: false,
-  });
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      // 게시글 가져오기
-      const { data: postsData } = await supabase
-        .from("posts")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      // 상담 문의 가져오기
-      const { data: consultData } = await supabase
-        .from("consultations")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      setPosts(postsData || []);
-      setConsultations(consultData || []);
-    } catch (error) {
-      console.error("데이터 로딩 오류:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleFormChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      if (editingId) {
-        // 수정 모드
-        const { error } = await supabase
-          .from("posts")
-          .update(formData)
-          .eq("id", editingId);
-
-        if (error) {
-          alert("게시글 수정 실패: " + error.message);
-        } else {
-          alert("게시글이 성공적으로 수정되었습니다!");
-          setEditingId(null);
-          setFormData({
-            title: "",
-            category: "자동차보험 가이드",
-            content: "",
-            is_published: false,
-          });
-          fetchData();
-        }
-      } else {
-        // 새 게시글 작성 모드
-        const { error } = await supabase.from("posts").insert([formData]);
-
-        if (error) {
-          alert("게시글 등록 실패: " + error.message);
-        } else {
-          alert("게시글이 성공적으로 등록되었습니다!");
-          setFormData({
-            title: "",
-            category: "자동차보험 가이드",
-            content: "",
-            is_published: false,
-          });
-          fetchData();
-        }
-      }
-    } catch (error) {
-      alert("오류가 발생했습니다: " + error.message);
-    }
-  };
-
-  const handleEdit = (post) => {
-    setEditingId(post.id);
-    setFormData({
-      title: post.title,
-      category: post.category,
-      content: post.content,
-      is_published: post.is_published,
-    });
-    // 폼으로 스크롤
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const handleCancelEdit = () => {
-    setEditingId(null);
-    setFormData({
-      title: "",
-      category: "자동차보험 가이드",
-      content: "",
-      is_published: false,
-    });
-  };
-
-  const handleDelete = async (id) => {
-    if (!window.confirm("정말 삭제하시겠습니까?")) return;
-
-    try {
-      const { error } = await supabase.from("posts").delete().eq("id", id);
-
-      if (error) {
-        alert("삭제 실패: " + error.message);
-      } else {
-        alert("삭제되었습니다.");
-        fetchData();
-      }
-    } catch (error) {
-      alert("오류가 발생했습니다: " + error.message);
-    }
-  };
-
-  const updateConsultationStatus = async (id, status) => {
-    try {
-      const { error } = await supabase
-        .from("consultations")
-        .update({ status })
-        .eq("id", id);
-
-      if (error) {
-        alert("상태 업데이트 실패: " + error.message);
-      } else {
-        fetchData();
-      }
-    } catch (error) {
-      alert("오류가 발생했습니다: " + error.message);
-    }
-  };
+  const {
+    posts,
+    consultations,
+    loading,
+    editingId,
+    formData,
+    handleFormChange,
+    handleSubmit,
+    handleEdit,
+    handleCancelEdit,
+    handleDelete,
+    updateConsultationStatus,
+  } = useAdmin();
 
   return (
     <div className="admin-container">
@@ -213,7 +85,12 @@ function Admin({ onLogout }) {
                 <div className="stat-number">{consultations.length}</div>
                 <div className="stat-change">
                   대기중:{" "}
-                  {consultations.filter((c) => c.status === "pending").length}건
+                  {
+                    consultations.filter(
+                      (c) => c.status === CONSULTATION_STATUS.PENDING
+                    ).length
+                  }
+                  건
                 </div>
               </div>
               <div className="stat-card">
@@ -264,12 +141,9 @@ function Admin({ onLogout }) {
                     value={formData.category}
                     onChange={handleFormChange}
                   >
-                    <option>자동차보험 가이드</option>
-                    <option>실손보험 정보</option>
-                    <option>암보험 가이드</option>
-                    <option>보험료 절약 팁</option>
-                    <option>보험금 청구 안내</option>
-                    <option>FAQ</option>
+                    {POST_CATEGORY_LIST.map((category) => (
+                      <option key={category}>{category}</option>
+                    ))}
                   </select>
                 </div>
 
@@ -326,14 +200,7 @@ function Admin({ onLogout }) {
                     <button
                       type="button"
                       className="btn btn-secondary"
-                      onClick={() =>
-                        setFormData({
-                          title: "",
-                          category: "자동차보험 가이드",
-                          content: "",
-                          is_published: false,
-                        })
-                      }
+                      onClick={handleCancelEdit}
                     >
                       초기화
                     </button>
@@ -349,7 +216,7 @@ function Admin({ onLogout }) {
               </div>
 
               {loading ? (
-                <div className="loading">로딩 중...</div>
+                <div className="loading">{POST_MESSAGES.LOADING}</div>
               ) : posts.length === 0 ? (
                 <div
                   style={{
@@ -358,7 +225,7 @@ function Admin({ onLogout }) {
                     color: "#666",
                   }}
                 >
-                  아직 게시글이 없습니다. 첫 게시글을 작성해보세요!
+                  {POST_MESSAGES.NO_POSTS}
                 </div>
               ) : (
                 posts.map((post) => (
@@ -418,7 +285,7 @@ function Admin({ onLogout }) {
               </div>
 
               {loading ? (
-                <div className="loading">로딩 중...</div>
+                <div className="loading">{POST_MESSAGES.LOADING}</div>
               ) : consultations.length === 0 ? (
                 <div
                   style={{
@@ -449,19 +316,10 @@ function Admin({ onLogout }) {
                         상태:{" "}
                         <span
                           style={{
-                            color:
-                              consult.status === "pending"
-                                ? "#f59e0b"
-                                : consult.status === "completed"
-                                ? "#10b981"
-                                : "#3b82f6",
+                            color: STATUS_COLORS[consult.status],
                           }}
                         >
-                          {consult.status === "pending"
-                            ? "대기중"
-                            : consult.status === "completed"
-                            ? "완료"
-                            : "진행중"}
+                          {STATUS_LABELS[consult.status]}
                         </span>{" "}
                         | {new Date(consult.created_at).toLocaleString()}
                       </div>
@@ -474,9 +332,15 @@ function Admin({ onLogout }) {
                         }
                         style={{ padding: "0.5rem", borderRadius: "6px" }}
                       >
-                        <option value="pending">대기중</option>
-                        <option value="in_progress">진행중</option>
-                        <option value="completed">완료</option>
+                        <option value={CONSULTATION_STATUS.PENDING}>
+                          {STATUS_LABELS[CONSULTATION_STATUS.PENDING]}
+                        </option>
+                        <option value={CONSULTATION_STATUS.IN_PROGRESS}>
+                          {STATUS_LABELS[CONSULTATION_STATUS.IN_PROGRESS]}
+                        </option>
+                        <option value={CONSULTATION_STATUS.COMPLETED}>
+                          {STATUS_LABELS[CONSULTATION_STATUS.COMPLETED]}
+                        </option>
                       </select>
                     </div>
                   </div>

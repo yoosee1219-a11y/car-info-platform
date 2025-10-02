@@ -1,0 +1,126 @@
+/* 목차(Table of Contents) 스타일 */
+
+.toc-section {
+  position: sticky;
+  top: calc(80px + 2rem); /* Header 높이 + 여백 */
+  max-height: calc(100vh - 80px - 4rem);
+  overflow-y: auto;
+}
+
+.toc-empty {
+  text-align: center;
+  padding: 1rem;
+  color: #9ca3af;
+}
+
+.toc-empty p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.toc-empty small {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  display: block;
+}
+
+/* 스크롤바 스타일링 */
+.toc-section::-webkit-scrollbar {
+  width: 6px;
+}
+
+.toc-section::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.toc-section::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.toc-section::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.toc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.toc-item {
+  padding: 0.65rem 1rem;
+  border-radius: 6px;
+  color: #4b5563;
+  text-decoration: none;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.toc-item:hover {
+  background: #f3f4f6;
+  color: #3b82f6;
+  border-left-color: #3b82f6;
+  transform: translateX(3px);
+}
+
+.toc-item.active {
+  background: #eff6ff;
+  color: #3b82f6;
+  font-weight: 600;
+  border-left-color: #3b82f6;
+}
+
+/* 레벨별 들여쓰기 */
+.toc-level-2 {
+  padding-left: 1rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.toc-level-3 {
+  padding-left: 2rem;
+  font-size: 0.875rem;
+}
+
+.toc-level-4 {
+  padding-left: 3rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+  .toc-section {
+    position: static;
+    max-height: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .toc-item {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .toc-level-2 {
+    padding-left: 0.75rem;
+  }
+
+  .toc-level-3 {
+    padding-left: 1.5rem;
+  }
+
+  .toc-level-4 {
+    padding-left: 2.25rem;
+  }
+}

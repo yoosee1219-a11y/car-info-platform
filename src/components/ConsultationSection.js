@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import {
+  CONSULTATION_FORM_DEFAULTS,
+  INSURANCE_TYPE_LIST,
+  CONSULTATION_MESSAGES,
+} from "../constants";
 
 function ConsultationSection({ onSubmit }) {
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    insurance_type: '자동차보험',
-    message: ''
-  });
+  const [formData, setFormData] = useState(CONSULTATION_FORM_DEFAULTS);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,36 +15,36 @@ function ConsultationSection({ onSubmit }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.name || !formData.phone) {
-      alert('이름과 전화번호는 필수입니다.');
+      alert(CONSULTATION_MESSAGES.REQUIRED_FIELDS);
       return;
     }
-    
+
     const success = await onSubmit(formData);
-    
+
     if (success) {
       // 폼 초기화
-      setFormData({
-        name: '',
-        phone: '',
-        email: '',
-        insurance_type: '자동차보험',
-        message: ''
-      });
+      setFormData(CONSULTATION_FORM_DEFAULTS);
     }
   };
 
   return (
     <section className="consultation-section" id="consult">
       <div className="consultation-content">
-        <h2 className="section-title" style={{ color: 'white' }}>
+        <h2 className="section-title" style={{ color: "white" }}>
           🤝 전문가 상담 서비스
         </h2>
-        <p style={{ fontSize: '1.2rem', marginBottom: '2rem', textAlign: 'center' }}>
+        <p
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "2rem",
+            textAlign: "center",
+          }}
+        >
           복잡한 보험, 전문가와 함께 해결하세요
         </p>
-        
+
         <form onSubmit={handleSubmit} className="consultation-form">
           <div className="form-group">
             <label>이름 *</label>
@@ -58,7 +57,7 @@ function ConsultationSection({ onSubmit }) {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label>연락처 *</label>
             <input
@@ -70,7 +69,7 @@ function ConsultationSection({ onSubmit }) {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label>이메일</label>
             <input
@@ -81,7 +80,7 @@ function ConsultationSection({ onSubmit }) {
               placeholder="example@email.com"
             />
           </div>
-          
+
           <div className="form-group">
             <label>보험 종류</label>
             <select
@@ -89,16 +88,12 @@ function ConsultationSection({ onSubmit }) {
               value={formData.insurance_type}
               onChange={handleChange}
             >
-              <option>자동차보험</option>
-              <option>실손보험</option>
-              <option>암보험</option>
-              <option>가족보험</option>
-              <option>주택화재보험</option>
-              <option>여행자보험</option>
-              <option>기타</option>
+              {INSURANCE_TYPE_LIST.map((type) => (
+                <option key={type}>{type}</option>
+              ))}
             </select>
           </div>
-          
+
           <div className="form-group">
             <label>문의 내용</label>
             <textarea
@@ -108,7 +103,7 @@ function ConsultationSection({ onSubmit }) {
               placeholder="상담받고 싶은 내용을 자유롭게 작성해주세요"
             />
           </div>
-          
+
           <button type="submit" className="submit-button">
             상담 신청하기
           </button>

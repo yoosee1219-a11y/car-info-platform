@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-import { supabase } from "./supabaseClient";
+import { usePosts, useConsultation } from "./hooks";
 
 // 컴포넌트
 import Header from "./components/Header";
@@ -24,52 +24,8 @@ import CompareDriver from "./components/CompareDriver";
 
 // 메인 페이지 컴포넌트
 function MainPage() {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  const fetchPosts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("posts")
-        .select("*")
-        .eq("is_published", true)
-        .order("created_at", { ascending: false })
-        .limit(6);
-
-      if (error) {
-        console.error("게시글 로딩 오류:", error);
-      } else {
-        setPosts(data || []);
-      }
-    } catch (error) {
-      console.error("오류:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleConsultation = async (formData) => {
-    try {
-      const { error } = await supabase.from("consultations").insert([formData]);
-
-      if (error) {
-        alert("상담 신청 중 오류가 발생했습니다.");
-        console.error("상담 신청 오류:", error);
-        return false;
-      }
-
-      alert("상담 신청이 완료되었습니다! 빠른 시일 내에 연락드리겠습니다.");
-      return true;
-    } catch (error) {
-      console.error("오류:", error);
-      alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-      return false;
-    }
-  };
+  const { posts, loading } = usePosts(6);
+  const { submitConsultation } = useConsultation();
 
   return (
     <>
@@ -78,7 +34,7 @@ function MainPage() {
       <QuickQuote />
       <InfoSection posts={posts} loading={loading} />
       <ComparisonSection />
-      <ConsultationSection onSubmit={handleConsultation} />
+      <ConsultationSection onSubmit={submitConsultation} />
       <Footer />
     </>
   );

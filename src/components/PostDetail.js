@@ -1,146 +1,69 @@
-import React, { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { supabase } from "../supabaseClient";
+import React, { useEffect, useState, useMemo } from "react";
+import { useParams, Link } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import Comments from "./Comments";
-import AdSidebar from "./AdSidebar";
+import TableOfContents from "./TableOfContents";
 import "./PostDetail.css";
+import { POST_MESSAGES } from "../constants";
+import { usePostDetail } from "../hooks";
+import {
+  extractTableOfContents,
+  addIdsToHeadings,
+  textToHtml,
+} from "../utils/contentParser";
 
 function PostDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
+  const { post, loading, categories, recentPosts, prevPost, nextPost } =
+    usePostDetail(id);
 
-  const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState([]);
-  const [recentPosts, setRecentPosts] = useState([]);
-  const [prevPost, setPrevPost] = useState(null);
-  const [nextPost, setNextPost] = useState(null);
+  const [processedContent, setProcessedContent] = useState("");
+  const [toc, setToc] = useState([]);
 
+  // 페이지 진입시 최상단으로 스크롤
   useEffect(() => {
-    fetchPost();
-    fetchCategories();
-    fetchRecentPosts();
-    incrementViewCount();
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }, [id]);
 
-  const fetchPost = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("posts")
-        .select("*")
-        .eq("id", id)
-        .eq("is_published", true)
-        .single();
+  // 콘텐츠 처리 및 목차 추출
+  useEffect(() => {
+    if (post?.content) {
+      // HTML 콘텐츠인지 일반 텍스트인지 확인
+      const isHtml = post.content.includes("<") && post.content.includes(">");
 
-      if (error) throw error;
+      let htmlContent = isHtml ? post.content : textToHtml(post.content);
 
-      if (data) {
-        setPost(data);
-        fetchAdjacentPosts(data.created_at);
-      } else {
-        navigate("/");
+      // 제목에 ID 추가
+      htmlContent = addIdsToHeadings(htmlContent);
+
+      // 목차 추출
+      const tocData = extractTableOfContents(htmlContent);
+
+      setProcessedContent(htmlContent);
+      setToc(tocData);
+
+      // 디버깅용 로그 (개발 중에만)
+      if (process.env.NODE_ENV === "development") {
+        console.log("📝 콘텐츠 처리 완료:", {
+          isHtml,
+          contentLength: post.content.length,
+          tocItems: tocData.length,
+          toc: tocData,
+        });
       }
-    } catch (error) {
-      console.error("게시글 로딩 오류:", error);
-      navigate("/");
-    } finally {
-      setLoading(false);
     }
-  };
-
-  const fetchAdjacentPosts = async (currentDate) => {
-    try {
-      // 이전 글
-      const { data: prevData } = await supabase
-        .from("posts")
-        .select("id, title")
-        .eq("is_published", true)
-        .lt("created_at", currentDate)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .single();
-
-      if (prevData) setPrevPost(prevData);
-
-      // 다음 글
-      const { data: nextData } = await supabase
-        .from("posts")
-        .select("id, title")
-        .eq("is_published", true)
-        .gt("created_at", currentDate)
-        .order("created_at", { ascending: true })
-        .limit(1)
-        .single();
-
-      if (nextData) setNextPost(nextData);
-    } catch (error) {
-      console.error("인접 게시글 로딩 오류:", error);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("posts")
-        .select("category")
-        .eq("is_published", true);
-
-      if (error) throw error;
-
-      // 카테고리 중복 제거 및 카운트
-      const categoryCount = {};
-      data.forEach((post) => {
-        if (post.category) {
-          categoryCount[post.category] =
-            (categoryCount[post.category] || 0) + 1;
-        }
-      });
-
-      const categoryList = Object.entries(categoryCount).map(
-        ([name, count]) => ({
-          name,
-          count,
-        })
-      );
-
-      setCategories(categoryList);
-    } catch (error) {
-      console.error("카테고리 로딩 오류:", error);
-    }
-  };
-
-  const fetchRecentPosts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("posts")
-        .select("id, title, created_at")
-        .eq("is_published", true)
-        .order("created_at", { ascending: false })
-        .limit(5);
-
-      if (error) throw error;
-      setRecentPosts(data || []);
-    } catch (error) {
-      console.error("최근 게시글 로딩 오류:", error);
-    }
-  };
-
-  const incrementViewCount = async () => {
-    try {
-      await supabase.rpc("increment_view_count", { post_id: id });
-    } catch (error) {
-      console.error("조회수 증가 오류:", error);
-    }
-  };
+  }, [post]);
 
   if (loading) {
     return (
       <>
         <Header />
         <div className="post-detail-container">
-          <div className="loading">로딩 중...</div>
+          <div className="loading">{POST_MESSAGES.LOADING}</div>
         </div>
         <Footer />
       </>
@@ -156,8 +79,8 @@ function PostDetail() {
       <Header />
       <div className="post-detail-container">
         <div className="post-detail-layout">
-          {/* 사이드바 */}
-          <aside className="post-sidebar">
+          {/* 왼쪽 사이드바 */}
+          <aside className="post-sidebar post-sidebar-left">
             <div className="sidebar-section">
               <h3>📚 보험 완벽 가이드</h3>
               <div className="category-list">
@@ -214,11 +137,10 @@ function PostDetail() {
                 </div>
               </div>
 
-              <div className="post-body">
-                {post.content.split("\n").map((line, index) => (
-                  <p key={index}>{line}</p>
-                ))}
-              </div>
+              <div
+                className="post-body"
+                dangerouslySetInnerHTML={{ __html: processedContent }}
+              />
             </article>
 
             {/* 이전글/다음글 네비게이션 */}
@@ -248,8 +170,10 @@ function PostDetail() {
             </div>
           </main>
 
-          {/* 광고 사이드바 - AdSense 승인 대기 중 임시 비활성화 */}
-          {/* <AdSidebar /> */}
+          {/* 오른쪽 사이드바 - 목차 */}
+          <aside className="post-sidebar post-sidebar-right">
+            <TableOfContents toc={toc} />
+          </aside>
         </div>
       </div>
       <Footer />
