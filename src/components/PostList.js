@@ -13,7 +13,7 @@ import { POST_CATEGORY_LIST } from "../constants";
 
 function PostList() {
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   // 상태 관리
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +21,9 @@ function PostList() {
     searchParams.get("category") || "전체"
   );
   const [sortBy, setSortBy] = useState("latest"); // latest, popular
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get("search") || ""
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 12;
 
@@ -30,13 +32,13 @@ function PostList() {
     const fetchPosts = async () => {
       setLoading(true);
       const result = await postService.fetchPublished();
-      
+
       if (result.success) {
         setPosts(result.data);
       } else {
         console.error("게시글 로딩 실패:", result.error);
       }
-      
+
       setLoading(false);
     };
 
@@ -46,11 +48,18 @@ function PostList() {
   // URL 파라미터 동기화
   useEffect(() => {
     const category = searchParams.get("category");
+    const search = searchParams.get("search");
+    
     if (category && category !== selectedCategory) {
       setSelectedCategory(category);
       setCurrentPage(1);
     }
-  }, [searchParams, selectedCategory]);
+    
+    if (search !== null && search !== searchQuery) {
+      setSearchQuery(search);
+      setCurrentPage(1);
+    }
+  }, [searchParams, selectedCategory, searchQuery]);
 
   // 카테고리별 게시글 수 계산
   const categoryCounts = useMemo(() => {
@@ -82,9 +91,7 @@ function PostList() {
 
     // 정렬
     if (sortBy === "latest") {
-      result.sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
-      );
+      result.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     } else if (sortBy === "popular") {
       result.sort((a, b) => (b.view_count || 0) - (a.view_count || 0));
     }
@@ -105,7 +112,7 @@ function PostList() {
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
     setCurrentPage(1);
-    
+
     // URL 파라미터 업데이트
     if (category === "전체") {
       searchParams.delete("category");
@@ -123,8 +130,17 @@ function PostList() {
 
   // 검색 핸들러
   const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
+    const newQuery = e.target.value;
+    setSearchQuery(newQuery);
     setCurrentPage(1);
+    
+    // URL 파라미터 업데이트
+    if (newQuery.trim()) {
+      searchParams.set("search", newQuery.trim());
+    } else {
+      searchParams.delete("search");
+    }
+    setSearchParams(searchParams);
   };
 
   // 정렬 변경 핸들러
@@ -303,7 +319,7 @@ function PostList() {
                     <div className="pagination-numbers">
                       {[...Array(totalPages)].map((_, index) => {
                         const pageNumber = index + 1;
-                        
+
                         // 현재 페이지 기준으로 ±2 페이지만 표시
                         if (
                           pageNumber === 1 ||
@@ -352,4 +368,3 @@ function PostList() {
 }
 
 export default PostList;
-

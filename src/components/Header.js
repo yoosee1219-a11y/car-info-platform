@@ -5,6 +5,7 @@ function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const scrollToSection = (sectionId) => {
     setMenuOpen(false); // 메뉴 닫기
@@ -27,12 +28,47 @@ function Header() {
     }
   };
 
+  // 검색 기능
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/posts?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+      setMenuOpen(false);
+    }
+  };
+
+  const handleSearchKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch(e);
+    }
+  };
+
   return (
     <header>
       <nav>
         <Link to="/" className="logo">
           🏦 보험이지
         </Link>
+
+        {/* 검색창 */}
+        <div className="header-search">
+          <input
+            type="text"
+            placeholder="보험 정보 검색..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={handleSearchKeyPress}
+            className="search-input"
+          />
+          <button
+            onClick={handleSearch}
+            className="search-button"
+            aria-label="검색"
+          >
+            🔍
+          </button>
+        </div>
 
         {/* 햄버거 메뉴 버튼 */}
         <button

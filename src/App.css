@@ -22,12 +22,13 @@ header {
 }
 
 nav {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 2rem;
 }
 
 .logo {
@@ -38,6 +39,56 @@ nav {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  white-space: nowrap;
+}
+
+/* 헤더 검색창 */
+.header-search {
+  display: flex;
+  align-items: center;
+  background: #f3f4f6;
+  border-radius: 50px;
+  padding: 0.5rem 1rem;
+  flex: 1;
+  max-width: 400px;
+  transition: all 0.3s;
+}
+
+.header-search:focus-within {
+  background: white;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border: 2px solid #3b82f6;
+  padding: calc(0.5rem - 2px) calc(1rem - 2px);
+}
+
+.header-search .search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  padding: 0.25rem 0.5rem;
+  outline: none;
+  color: #1f2937;
+}
+
+.header-search .search-input::placeholder {
+  color: #9ca3af;
+}
+
+.header-search .search-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.25rem 0.5rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-search .search-button:hover {
+  transform: scale(1.1);
 }
 
 .nav-menu {
@@ -550,6 +601,16 @@ footer {
 
   .logo {
     font-size: 1.5rem;
+  }
+
+  /* 헤더 검색창 반응형 */
+  .header-search {
+    position: absolute;
+    top: 70px;
+    left: 1rem;
+    right: 1rem;
+    max-width: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   /* 햄버거 메뉴 보이기 */

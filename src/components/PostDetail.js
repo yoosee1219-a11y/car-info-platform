@@ -15,7 +15,7 @@ import {
 import {
   getArticleSchema,
   getBreadcrumbSchema,
-  getOrganizationSchema
+  getOrganizationSchema,
 } from "../utils/seoSchema";
 
 function PostDetail() {
@@ -33,7 +33,7 @@ function PostDetail() {
     const schemas = [
       getOrganizationSchema(),
       getArticleSchema(post),
-      getBreadcrumbSchema(post.category, post.title)
+      getBreadcrumbSchema(post.category, post.title),
     ];
 
     return schemas;
@@ -44,33 +44,51 @@ function PostDetail() {
     if (post) {
       // 메타 태그 업데이트
       document.title = `${post.title} - 보험이지`;
-      
+
       // 메타 설명
-      const metaDescription = document.querySelector('meta[name="description"]') || document.createElement('meta');
-      metaDescription.setAttribute('name', 'description');
-      metaDescription.setAttribute('content', post.content ? post.content.substring(0, 160).replace(/<[^>]*>/g, '') : '');
+      const metaDescription =
+        document.querySelector('meta[name="description"]') ||
+        document.createElement("meta");
+      metaDescription.setAttribute("name", "description");
+      metaDescription.setAttribute(
+        "content",
+        post.content
+          ? post.content.substring(0, 160).replace(/<[^>]*>/g, "")
+          : ""
+      );
       if (!document.querySelector('meta[name="description"]')) {
         document.head.appendChild(metaDescription);
       }
 
       // Open Graph 메타 태그
-      const ogTitle = document.querySelector('meta[property="og:title"]') || document.createElement('meta');
-      ogTitle.setAttribute('property', 'og:title');
-      ogTitle.setAttribute('content', post.title);
+      const ogTitle =
+        document.querySelector('meta[property="og:title"]') ||
+        document.createElement("meta");
+      ogTitle.setAttribute("property", "og:title");
+      ogTitle.setAttribute("content", post.title);
       if (!document.querySelector('meta[property="og:title"]')) {
         document.head.appendChild(ogTitle);
       }
 
-      const ogDescription = document.querySelector('meta[property="og:description"]') || document.createElement('meta');
-      ogDescription.setAttribute('property', 'og:description');
-      ogDescription.setAttribute('content', post.content ? post.content.substring(0, 160).replace(/<[^>]*>/g, '') : '');
+      const ogDescription =
+        document.querySelector('meta[property="og:description"]') ||
+        document.createElement("meta");
+      ogDescription.setAttribute("property", "og:description");
+      ogDescription.setAttribute(
+        "content",
+        post.content
+          ? post.content.substring(0, 160).replace(/<[^>]*>/g, "")
+          : ""
+      );
       if (!document.querySelector('meta[property="og:description"]')) {
         document.head.appendChild(ogDescription);
       }
 
-      const ogType = document.querySelector('meta[property="og:type"]') || document.createElement('meta');
-      ogType.setAttribute('property', 'og:type');
-      ogType.setAttribute('content', 'article');
+      const ogType =
+        document.querySelector('meta[property="og:type"]') ||
+        document.createElement("meta");
+      ogType.setAttribute("property", "og:type");
+      ogType.setAttribute("content", "article");
       if (!document.querySelector('meta[property="og:type"]')) {
         document.head.appendChild(ogType);
       }
@@ -78,21 +96,25 @@ function PostDetail() {
 
     if (schemaData) {
       // 기존 스키마 제거
-      const existingSchemas = document.querySelectorAll('script[type="application/ld+json"]');
-      existingSchemas.forEach(schema => schema.remove());
+      const existingSchemas = document.querySelectorAll(
+        'script[type="application/ld+json"]'
+      );
+      existingSchemas.forEach((schema) => schema.remove());
 
       // 새 스키마 추가
       schemaData.forEach((schema) => {
-        const script = document.createElement('script');
-        script.type = 'application/ld+json';
+        const script = document.createElement("script");
+        script.type = "application/ld+json";
         script.text = JSON.stringify(schema);
         document.head.appendChild(script);
       });
 
       // 컴포넌트 언마운트 시 정리
       return () => {
-        const schemas = document.querySelectorAll('script[type="application/ld+json"]');
-        schemas.forEach(schema => schema.remove());
+        const schemas = document.querySelectorAll(
+          'script[type="application/ld+json"]'
+        );
+        schemas.forEach((schema) => schema.remove());
       };
     }
   }, [schemaData, post]);
@@ -111,28 +133,34 @@ function PostDetail() {
       // 디버깅: 원본 콘텐츠 확인
       console.log("🔍 원본 콘텐츠:", post.content);
       console.log("🔍 콘텐츠 타입:", typeof post.content);
-      
+
       // HTML 엔티티 디코딩 함수
       const decodeHTMLEntities = (text) => {
-        const textArea = document.createElement('textarea');
+        const textArea = document.createElement("textarea");
         textArea.innerHTML = text;
         return textArea.value;
       };
-      
+
       // HTML 엔티티가 포함되어 있는지 확인
-      const hasHTMLEntities = post.content.includes('&lt;') || post.content.includes('&gt;') || post.content.includes('&quot;');
-      
+      const hasHTMLEntities =
+        post.content.includes("&lt;") ||
+        post.content.includes("&gt;") ||
+        post.content.includes("&quot;");
+
       if (hasHTMLEntities) {
         console.log("⚠️ HTML 엔티티 감지됨. 디코딩 진행...");
       }
-      
+
       // HTML 엔티티 디코딩
-      let decodedContent = hasHTMLEntities ? decodeHTMLEntities(post.content) : post.content;
-      
+      let decodedContent = hasHTMLEntities
+        ? decodeHTMLEntities(post.content)
+        : post.content;
+
       console.log("✅ 디코딩된 콘텐츠:", decodedContent);
-      
+
       // HTML 콘텐츠인지 일반 텍스트인지 확인
-      const isHtml = decodedContent.includes("<") && decodedContent.includes(">");
+      const isHtml =
+        decodedContent.includes("<") && decodedContent.includes(">");
 
       let htmlContent = isHtml ? decodedContent : textToHtml(decodedContent);
 
@@ -152,7 +180,7 @@ function PostDetail() {
           hasHTMLEntities,
           contentLength: post.content.length,
           tocItems: tocData.length,
-          processedContent: htmlContent.substring(0, 200) + "..."
+          processedContent: htmlContent.substring(0, 200) + "...",
         });
       }
     }
@@ -186,7 +214,9 @@ function PostDetail() {
               <div className="category-list">
                 <Link to="/posts" className="category-item all">
                   전체보기
-                  <span className="count">({categories.reduce((sum, c) => sum + c.count, 0)})</span>
+                  <span className="count">
+                    ({categories.reduce((sum, c) => sum + c.count, 0)})
+                  </span>
                 </Link>
                 {categories.map((cat) => (
                   <Link
@@ -228,7 +258,7 @@ function PostDetail() {
           <main className="post-main">
             <article className="post-content">
               <div className="post-header">
-                <Link 
+                <Link
                   to={`/posts?category=${encodeURIComponent(post.category)}`}
                   className="post-category"
                 >
