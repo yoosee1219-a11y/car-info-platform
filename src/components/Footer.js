@@ -87,4 +87,5 @@ function Footer() {
   );
 }
 
-export default Footer;
+// React.memo로 감싸서 불필요한 리렌더링 방지
+export default React.memo(Footer);

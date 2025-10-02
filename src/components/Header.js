@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 function Header() {
@@ -7,42 +7,59 @@ function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const scrollToSection = (sectionId) => {
-    setMenuOpen(false); // 메뉴 닫기
-    // 메인 페이지가 아니면 먼저 메인 페이지로 이동
-    if (location.pathname !== "/") {
-      navigate("/");
-      // 페이지 이동 후 스크롤
-      setTimeout(() => {
+  const scrollToSection = useCallback(
+    (sectionId) => {
+      setMenuOpen(false); // 메뉴 닫기
+      // 메인 페이지가 아니면 먼저 메인 페이지로 이동
+      if (location.pathname !== "/") {
+        navigate("/");
+        // 페이지 이동 후 스크롤
+        setTimeout(() => {
+          const element = document.querySelector(sectionId);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 100);
+      } else {
+        // 이미 메인 페이지면 바로 스크롤
         const element = document.querySelector(sectionId);
         if (element) {
           element.scrollIntoView({ behavior: "smooth" });
         }
-      }, 100);
-    } else {
-      // 이미 메인 페이지면 바로 스크롤
-      const element = document.querySelector(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
       }
-    }
-  };
+    },
+    [location.pathname, navigate]
+  );
 
-  // 검색 기능
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/posts?search=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery("");
-      setMenuOpen(false);
-    }
-  };
+  // 검색 기능 (useCallback으로 최적화)
+  const handleSearch = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (searchQuery.trim()) {
+        navigate(`/posts?search=${encodeURIComponent(searchQuery.trim())}`);
+        setSearchQuery("");
+        setMenuOpen(false);
+      }
+    },
+    [searchQuery, navigate]
+  );
 
-  const handleSearchKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSearch(e);
-    }
-  };
+  const handleSearchKeyPress = useCallback(
+    (e) => {
+      if (e.key === "Enter") {
+        handleSearch(e);
+      }
+    },
+    [handleSearch]
+  );
+
+  const toggleMenu = useCallback(() => {
+    setMenuOpen((prev) => !prev);
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+  }, []);
 
   return (
     <header>
@@ -71,11 +88,7 @@ function Header() {
         </div>
 
         {/* 햄버거 메뉴 버튼 */}
-        <button
-          className="hamburger"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="메뉴"
-        >
+        <button className="hamburger" onClick={toggleMenu} aria-label="메뉴">
           <span></span>
           <span></span>
           <span></span>
@@ -116,7 +129,7 @@ function Header() {
             </a>
           </li>
           <li>
-            <Link to="/admin" onClick={() => setMenuOpen(false)}>
+            <Link to="/admin" onClick={closeMenu}>
               관리자
             </Link>
           </li>

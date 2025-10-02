@@ -9,4 +9,5 @@ function Hero() {
   );
 }
 
-export default Hero;
+// React.memo로 감싸서 불필요한 리렌더링 방지
+export default React.memo(Hero);

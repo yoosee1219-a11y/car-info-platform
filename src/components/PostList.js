@@ -3,14 +3,14 @@
  * 전체 게시글 목록, 카테고리 필터링, 검색, 정렬, 페이지네이션 지원
  */
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
+import PostCard from "./PostCard";
 import "./PostList.css";
 import { postService } from "../services";
 import { POST_CATEGORY_LIST } from "../constants";
-import { stripHtmlTags } from "../utils";
 
 function PostList() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -50,12 +50,12 @@ function PostList() {
   useEffect(() => {
     const category = searchParams.get("category");
     const search = searchParams.get("search");
-    
+
     if (category && category !== selectedCategory) {
       setSelectedCategory(category);
       setCurrentPage(1);
     }
-    
+
     if (search !== null && search !== searchQuery) {
       setSearchQuery(search);
       setCurrentPage(1);
@@ -109,46 +109,52 @@ function PostList() {
     indexOfLastPost
   );
 
-  // 카테고리 변경 핸들러
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
-    setCurrentPage(1);
+  // 카테고리 변경 핸들러 (useCallback으로 최적화)
+  const handleCategoryChange = useCallback(
+    (category) => {
+      setSelectedCategory(category);
+      setCurrentPage(1);
 
-    // URL 파라미터 업데이트
-    if (category === "전체") {
-      searchParams.delete("category");
-    } else {
-      searchParams.set("category", category);
-    }
-    setSearchParams(searchParams);
-  };
+      // URL 파라미터 업데이트
+      if (category === "전체") {
+        searchParams.delete("category");
+      } else {
+        searchParams.set("category", category);
+      }
+      setSearchParams(searchParams);
+    },
+    [searchParams, setSearchParams]
+  );
 
-  // 페이지 변경 핸들러
-  const handlePageChange = (pageNumber) => {
+  // 페이지 변경 핸들러 (useCallback으로 최적화)
+  const handlePageChange = useCallback((pageNumber) => {
     setCurrentPage(pageNumber);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  }, []);
 
-  // 검색 핸들러
-  const handleSearch = (e) => {
-    const newQuery = e.target.value;
-    setSearchQuery(newQuery);
-    setCurrentPage(1);
-    
-    // URL 파라미터 업데이트
-    if (newQuery.trim()) {
-      searchParams.set("search", newQuery.trim());
-    } else {
-      searchParams.delete("search");
-    }
-    setSearchParams(searchParams);
-  };
+  // 검색 핸들러 (useCallback으로 최적화)
+  const handleSearch = useCallback(
+    (e) => {
+      const newQuery = e.target.value;
+      setSearchQuery(newQuery);
+      setCurrentPage(1);
 
-  // 정렬 변경 핸들러
-  const handleSortChange = (newSortBy) => {
+      // URL 파라미터 업데이트
+      if (newQuery.trim()) {
+        searchParams.set("search", newQuery.trim());
+      } else {
+        searchParams.delete("search");
+      }
+      setSearchParams(searchParams);
+    },
+    [searchParams, setSearchParams]
+  );
+
+  // 정렬 변경 핸들러 (useCallback으로 최적화)
+  const handleSortChange = useCallback((newSortBy) => {
     setSortBy(newSortBy);
     setCurrentPage(1);
-  };
+  }, []);
 
   return (
     <>
@@ -275,30 +281,7 @@ function PostList() {
               <>
                 <div className="post-grid">
                   {currentPosts.map((post) => (
-                    <Link
-                      key={post.id}
-                      to={`/post/${post.id}`}
-                      className="post-card"
-                    >
-                      <div className="post-card-header">
-                        <span className="post-category">{post.category}</span>
-                        <span className="post-date">
-                          {new Date(post.created_at).toLocaleDateString()}
-                        </span>
-                      </div>
-
-                      <h2 className="post-title">{post.title}</h2>
-
-                      <p className="post-excerpt">
-                        {stripHtmlTags(post.content, 120) || "내용 없음"}
-                      </p>
-
-                      <div className="post-card-footer">
-                        <span className="post-views">
-                          👁️ {post.view_count || 0}
-                        </span>
-                      </div>
-                    </Link>
+                    <PostCard key={post.id} post={post} />
                   ))}
                 </div>
 

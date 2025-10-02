@@ -8,6 +8,37 @@ import { Link } from "react-router-dom";
 import { postService } from "../services";
 import "./PopularPosts.css";
 
+/**
+ * 인기 게시글 아이템 컴포넌트 (React.memo 최적화)
+ */
+const PopularPostItem = React.memo(({ post, index }) => (
+  <Link to={`/post/${post.id}`} className="popular-item">
+    <div className="popular-rank">
+      <span className={`rank-number rank-${index + 1}`}>{index + 1}</span>
+    </div>
+
+    <div className="popular-content">
+      <div className="popular-item-header">
+        {post.is_featured && <span className="featured-badge">⭐</span>}
+        <span className="popular-category">{post.category}</span>
+      </div>
+
+      <h3 className="popular-item-title">{post.title}</h3>
+
+      <div className="popular-meta">
+        <span className="popular-views">
+          👁️ {(post.view_count || 0).toLocaleString()} 조회
+        </span>
+        <span className="popular-date">
+          {new Date(post.created_at).toLocaleDateString()}
+        </span>
+      </div>
+    </div>
+
+    <div className="popular-arrow">→</div>
+  </Link>
+));
+
 function PopularPosts() {
   const [popularPosts, setPopularPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,10 +46,10 @@ function PopularPosts() {
   useEffect(() => {
     const fetchPopularPosts = async () => {
       setLoading(true);
-      
+
       try {
         const result = await postService.fetchPopular(5);
-        
+
         if (result.success) {
           setPopularPosts(result.data);
         } else {
@@ -27,7 +58,7 @@ function PopularPosts() {
       } catch (error) {
         console.error("인기 게시글 로딩 오류:", error);
       }
-      
+
       setLoading(false);
     };
 
@@ -61,37 +92,7 @@ function PopularPosts() {
 
         <div className="popular-list">
           {popularPosts.map((post, index) => (
-            <Link
-              key={post.id}
-              to={`/post/${post.id}`}
-              className="popular-item"
-            >
-              <div className="popular-rank">
-                <span className={`rank-number rank-${index + 1}`}>
-                  {index + 1}
-                </span>
-              </div>
-
-              <div className="popular-content">
-                <div className="popular-item-header">
-                  {post.is_featured && <span className="featured-badge">⭐</span>}
-                  <span className="popular-category">{post.category}</span>
-                </div>
-
-                <h3 className="popular-item-title">{post.title}</h3>
-
-                <div className="popular-meta">
-                  <span className="popular-views">
-                    👁️ {(post.view_count || 0).toLocaleString()} 조회
-                  </span>
-                  <span className="popular-date">
-                    {new Date(post.created_at).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-
-              <div className="popular-arrow">→</div>
-            </Link>
+            <PopularPostItem key={post.id} post={post} index={index} />
           ))}
         </div>
 
@@ -106,4 +107,3 @@ function PopularPosts() {
 }
 
 export default PopularPosts;
-

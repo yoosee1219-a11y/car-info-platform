@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useCallback } from "react";
 import "./Comments.css";
+import CommentItem from "./CommentItem";
 import { useComments } from "../hooks";
 import { COMMENT_MESSAGES } from "../constants";
 
@@ -16,6 +17,17 @@ function Comments({ postId }) {
     toggleDeleteInput,
     setDeletePassword,
   } = useComments(postId);
+
+  // 삭제 비밀번호 변경 핸들러 (useCallback으로 최적화)
+  const handleDeletePasswordChange = useCallback(
+    (commentId, value) => {
+      setDeletePassword((prev) => ({
+        ...prev,
+        [commentId]: value,
+      }));
+    },
+    [setDeletePassword]
+  );
 
   return (
     <div className="comments-section">
@@ -62,53 +74,15 @@ function Comments({ postId }) {
           <div className="no-comments">{COMMENT_MESSAGES.NO_COMMENTS}</div>
         ) : (
           comments.map((comment) => (
-            <div key={comment.id} className="comment-item">
-              <div className="comment-header">
-                <span className="comment-author">{comment.author_name}</span>
-                <span className="comment-date">
-                  {new Date(comment.created_at).toLocaleString()}
-                </span>
-              </div>
-              <div className="comment-content">{comment.content}</div>
-              <div className="comment-actions">
-                {!showDeleteInput[comment.id] ? (
-                  <button
-                    onClick={() => toggleDeleteInput(comment.id)}
-                    className="btn-delete-toggle"
-                  >
-                    삭제
-                  </button>
-                ) : (
-                  <div className="delete-input-group">
-                    <input
-                      type="password"
-                      placeholder="비밀번호"
-                      value={deletePassword[comment.id] || ""}
-                      onChange={(e) =>
-                        setDeletePassword({
-                          ...deletePassword,
-                          [comment.id]: e.target.value,
-                        })
-                      }
-                    />
-                    <button
-                      onClick={() =>
-                        handleDelete(comment.id, comment.author_password)
-                      }
-                      className="btn-confirm-delete"
-                    >
-                      확인
-                    </button>
-                    <button
-                      onClick={() => toggleDeleteInput(comment.id)}
-                      className="btn-cancel-delete"
-                    >
-                      취소
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              showDeleteInput={showDeleteInput[comment.id]}
+              deletePassword={deletePassword[comment.id]}
+              onToggleDeleteInput={toggleDeleteInput}
+              onDeletePasswordChange={handleDeletePasswordChange}
+              onDelete={handleDelete}
+            />
           ))
         )}
       </div>
