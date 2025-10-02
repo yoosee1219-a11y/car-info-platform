@@ -743,6 +743,63 @@ function Admin({ onLogout }) {
                   </div>
                 </div>
 
+                {/* 조회수 및 인기글 설정 */}
+                <div className="form-row">
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label>조회수 (직접 입력 가능)</label>
+                    <input
+                      type="number"
+                      name="view_count"
+                      value={formData.view_count || 0}
+                      onChange={handleFormChange}
+                      min="0"
+                      placeholder="0"
+                      style={{
+                        padding: "0.75rem",
+                        fontSize: "1rem",
+                        borderRadius: "6px",
+                        border: "1px solid #d1d5db",
+                      }}
+                    />
+                    <small style={{ color: "#6b7280", fontSize: "0.85rem" }}>
+                      💡 관리자가 직접 조회수를 설정할 수 있습니다
+                    </small>
+                  </div>
+
+                  <div className="form-group" style={{ flex: 1 }}>
+                    <label>인기글 설정</label>
+                    <label
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.75rem",
+                        padding: "0.75rem 1rem",
+                        background: formData.is_featured ? "#fef3c7" : "#f9fafb",
+                        border: formData.is_featured
+                          ? "2px solid #f59e0b"
+                          : "2px solid #e5e7eb",
+                        borderRadius: "8px",
+                        cursor: "pointer",
+                        transition: "all 0.3s",
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        name="is_featured"
+                        checked={formData.is_featured || false}
+                        onChange={handleFormChange}
+                        style={{ width: "20px", height: "20px" }}
+                      />
+                      <span style={{ fontWeight: 500 }}>
+                        {formData.is_featured ? "⭐ 인기글로 표시" : "인기글 설정"}
+                      </span>
+                    </label>
+                    <small style={{ color: "#6b7280", fontSize: "0.85rem" }}>
+                      💡 메인 페이지 인기글 섹션에 우선 표시됩니다
+                    </small>
+                  </div>
+                </div>
+
                 <div className="form-group">
                   <label>
                     <input
@@ -793,6 +850,18 @@ function Admin({ onLogout }) {
                   <div key={post.id} className="list-item">
                     <div className="item-info">
                       <h3>
+                        {post.is_featured && (
+                          <span
+                            style={{
+                              color: "#f59e0b",
+                              fontSize: "1.2rem",
+                              marginRight: "0.5rem",
+                            }}
+                            title="인기글"
+                          >
+                            ⭐
+                          </span>
+                        )}
                         {post.title}
                         {!post.is_published && (
                           <span
@@ -810,6 +879,17 @@ function Admin({ onLogout }) {
                         {post.category} |{" "}
                         {new Date(post.created_at).toLocaleDateString()} | 조회{" "}
                         {post.view_count || 0}
+                        {post.is_featured && (
+                          <span
+                            style={{
+                              color: "#f59e0b",
+                              marginLeft: "0.5rem",
+                              fontWeight: "600",
+                            }}
+                          >
+                            | ⭐ 인기글
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div className="item-actions">

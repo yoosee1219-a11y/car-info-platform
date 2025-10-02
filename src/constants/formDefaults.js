@@ -11,6 +11,8 @@ export const POST_FORM_DEFAULTS = {
   category: DEFAULT_CATEGORY,
   content: "",
   is_published: false,
+  view_count: 0,
+  is_featured: false,
 };
 
 // 상담 문의 폼 초기값
