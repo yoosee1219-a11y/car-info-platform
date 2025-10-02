@@ -31,7 +31,7 @@ function Header() {
     <header>
       <nav>
         <Link to="/" className="logo">
-          🏦 인슈어팟
+          🏦 보험이지
         </Link>
 
         {/* 햄버거 메뉴 버튼 */}

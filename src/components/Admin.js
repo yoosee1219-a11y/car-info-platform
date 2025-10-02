@@ -31,7 +31,7 @@ function Admin({ onLogout }) {
     <div className="admin-container">
       {/* 사이드바 */}
       <aside className="sidebar">
-        <h2>🏦 인슈어팟 관리자</h2>
+        <h2>🏦 보험이지 관리자</h2>
         <div
           className={`menu-item ${activeTab === "dashboard" ? "active" : ""}`}
           onClick={() => setActiveTab("dashboard")}
@@ -72,7 +72,7 @@ function Admin({ onLogout }) {
           <>
             <div className="content-header">
               <h1>대시보드</h1>
-              <p>인슈어팟 운영 현황을 한눈에 확인하세요</p>
+              <p>보험이지 운영 현황을 한눈에 확인하세요</p>
             </div>
 
             <div className="stats-grid">

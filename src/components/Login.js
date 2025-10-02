@@ -32,7 +32,7 @@ function Login({ onLoginSuccess }) {
     <div className="login-container">
       <div className="login-box">
         <div className="login-header">
-          <h1>🏦 인슈어팟</h1>
+          <h1>🏦 보험이지</h1>
           <p>관리자 로그인</p>
         </div>
 

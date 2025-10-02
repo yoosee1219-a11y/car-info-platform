@@ -7,7 +7,7 @@ function Footer() {
         <div className="footer-section">
           <h4>회사 소개</h4>
           <ul>
-            <li><a href="#about">인슈어팟 소개</a></li>
+            <li><a href="#about">보험이지 소개</a></li>
             <li><a href="#partnership">제휴 문의</a></li>
             <li><a href="#careers">채용 정보</a></li>
             <li><a href="#press">보도자료</a></li>
@@ -46,7 +46,7 @@ function Footer() {
       </div>
       
       <div className="footer-bottom">
-        <p>&copy; 2024 인슈어팟. All rights reserved. | 보험대리점 등록번호: 2024-서울-1234</p>
+        <p>&copy; 2024 보험이지. All rights reserved. | 보험대리점 등록번호: 2024-서울-1234</p>
       </div>
     </footer>
   );
