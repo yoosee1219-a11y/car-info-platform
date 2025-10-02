@@ -47,8 +47,10 @@ function ShareButtons({ post }) {
 
     // Kakao SDK 초기화 확인
     if (!window.Kakao.isInitialized()) {
-      // JavaScript 키로 초기화 (public/index.html에서 설정 필요)
-      window.Kakao.init(process.env.REACT_APP_KAKAO_KEY || "YOUR_KAKAO_JS_KEY");
+      // JavaScript 키로 초기화
+      const kakaoKey = process.env.REACT_APP_KAKAO_KEY || "cafd9dfe1955184f28f022dadc403d9b";
+      window.Kakao.init(kakaoKey);
+      console.log("✅ 카카오 SDK 초기화 완료");
     }
 
     try {
