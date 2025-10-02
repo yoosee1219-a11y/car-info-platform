@@ -6,6 +6,7 @@ import { usePosts, useConsultation } from "./hooks";
 // 컴포넌트
 import Header from "./components/Header";
 import Hero from "./components/Hero";
+import PopularPosts from "./components/PopularPosts";
 import QuickQuote from "./components/QuickQuote";
 import InfoSection from "./components/InfoSection";
 import ComparisonSection from "./components/ComparisonSection";
@@ -32,6 +33,7 @@ function MainPage() {
     <>
       <Header />
       <Hero />
+      <PopularPosts />
       <QuickQuote />
       <InfoSection posts={posts} loading={loading} />
       <ComparisonSection />

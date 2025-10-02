@@ -245,4 +245,47 @@ export const postService = {
       return handleApiError(error, "최근 게시글 조회 실패");
     }
   },
+
+  /**
+   * 인기 게시글 조회
+   * is_featured = true인 글 우선, 나머지는 조회수 순
+   * @param {number} limit - 조회할 게시글 수
+   * @returns {Promise<Object>}
+   */
+  fetchPopular: async (limit = 5) => {
+    try {
+      // 1. 인기글로 설정된 글 가져오기
+      const featuredResponse = await supabase
+        .from("posts")
+        .select("*")
+        .eq("is_published", true)
+        .eq("is_featured", true)
+        .order("view_count", { ascending: false });
+
+      const featuredPosts = featuredResponse.data || [];
+
+      // 2. 나머지 조회수 높은 글 가져오기
+      const remainingLimit = limit - featuredPosts.length;
+      let topPosts = [];
+
+      if (remainingLimit > 0) {
+        const topResponse = await supabase
+          .from("posts")
+          .select("*")
+          .eq("is_published", true)
+          .eq("is_featured", false)
+          .order("view_count", { ascending: false })
+          .limit(remainingLimit);
+
+        topPosts = topResponse.data || [];
+      }
+
+      // 3. 합치기 (인기글 먼저, 그 다음 조회수 순)
+      const popularPosts = [...featuredPosts, ...topPosts].slice(0, limit);
+
+      return createSuccessResult(popularPosts);
+    } catch (error) {
+      return handleApiError(error, "인기 게시글 조회 실패");
+    }
+  },
 };
