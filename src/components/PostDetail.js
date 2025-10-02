@@ -4,6 +4,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Comments from "./Comments";
 import TableOfContents from "./TableOfContents";
+import ShareButtons from "./ShareButtons";
 import "./PostDetail.css";
 import { POST_MESSAGES } from "../constants";
 import { usePostDetail } from "../hooks";
@@ -277,6 +278,9 @@ function PostDetail() {
                 className="post-body"
                 dangerouslySetInnerHTML={{ __html: processedContent }}
               />
+
+              {/* 공유 버튼 */}
+              <ShareButtons post={post} />
             </article>
 
             {/* 이전글/다음글 네비게이션 */}
