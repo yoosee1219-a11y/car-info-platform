@@ -5,3 +5,4 @@
 
 export * from "./contentParser";
 export * from "./errorHandler";
+export * from "./seoSchema";

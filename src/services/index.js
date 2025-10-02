@@ -7,3 +7,4 @@ export { postService } from "./postService";
 export { consultationService } from "./consultationService";
 export { commentService } from "./commentService";
 export { authService } from "./authService";
+export { imageUploadService } from "./imageUploadService";

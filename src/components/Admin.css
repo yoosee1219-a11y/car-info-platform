@@ -5,6 +5,163 @@
   background: #f3f4f6;
 }
 
+/* TipTap Editor Styles */
+.tiptap-editor-wrapper {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  overflow: hidden;
+}
+
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.editor-toolbar button {
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editor-toolbar button:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.editor-toolbar button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.editor-toolbar button.is-active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.toolbar-divider {
+  margin: 0 4px;
+  color: #d1d5db;
+  align-self: center;
+}
+
+.tiptap-editor-content {
+  min-height: 400px;
+  padding: 16px;
+}
+
+/* TipTap 콘텐츠 스타일 */
+.tiptap-editor-content .ProseMirror {
+  min-height: 400px;
+  outline: none;
+}
+
+.tiptap-editor-content .ProseMirror:focus {
+  outline: none;
+}
+
+.tiptap-editor-content h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0.67em 0;
+}
+
+.tiptap-editor-content h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0.75em 0;
+}
+
+.tiptap-editor-content h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin: 0.83em 0;
+}
+
+.tiptap-editor-content ul,
+.tiptap-editor-content ol {
+  padding-left: 2em;
+  margin: 1em 0;
+}
+
+.tiptap-editor-content li {
+  margin: 0.25em 0;
+}
+
+.tiptap-editor-content blockquote {
+  border-left: 3px solid #d1d5db;
+  padding-left: 1em;
+  margin-left: 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.tiptap-editor-content pre {
+  background: #1f2937;
+  color: #f3f4f6;
+  padding: 12px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+}
+
+.tiptap-editor-content code {
+  background: #f3f4f6;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+}
+
+.tiptap-editor-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 1em 0;
+}
+
+.tiptap-editor-content a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.tiptap-editor-content a:hover {
+  color: #2563eb;
+}
+
+.tiptap-editor-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.tiptap-editor-content table td,
+.tiptap-editor-content table th {
+  border: 1px solid #d1d5db;
+  padding: 8px;
+}
+
+.tiptap-editor-content table th {
+  background: #f3f4f6;
+  font-weight: bold;
+}
+
+.tiptap-editor-content table tr:nth-child(even) {
+  background: #f9fafb;
+}
+
 /* 사이드바 */
 .sidebar {
   width: 250px;

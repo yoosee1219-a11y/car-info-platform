@@ -12,6 +12,11 @@ import {
   addIdsToHeadings,
   textToHtml,
 } from "../utils/contentParser";
+import {
+  getArticleSchema,
+  getBreadcrumbSchema,
+  getOrganizationSchema
+} from "../utils/seoSchema";
 
 function PostDetail() {
   const { id } = useParams();
@@ -20,6 +25,77 @@ function PostDetail() {
 
   const [processedContent, setProcessedContent] = useState("");
   const [toc, setToc] = useState([]);
+
+  // SEO 구조화 데이터 생성
+  const schemaData = useMemo(() => {
+    if (!post) return null;
+
+    const schemas = [
+      getOrganizationSchema(),
+      getArticleSchema(post),
+      getBreadcrumbSchema(post.category, post.title)
+    ];
+
+    return schemas;
+  }, [post]);
+
+  // SEO 스크립트 및 메타 태그 삽입
+  useEffect(() => {
+    if (post) {
+      // 메타 태그 업데이트
+      document.title = `${post.title} - 보험이지`;
+      
+      // 메타 설명
+      const metaDescription = document.querySelector('meta[name="description"]') || document.createElement('meta');
+      metaDescription.setAttribute('name', 'description');
+      metaDescription.setAttribute('content', post.content ? post.content.substring(0, 160).replace(/<[^>]*>/g, '') : '');
+      if (!document.querySelector('meta[name="description"]')) {
+        document.head.appendChild(metaDescription);
+      }
+
+      // Open Graph 메타 태그
+      const ogTitle = document.querySelector('meta[property="og:title"]') || document.createElement('meta');
+      ogTitle.setAttribute('property', 'og:title');
+      ogTitle.setAttribute('content', post.title);
+      if (!document.querySelector('meta[property="og:title"]')) {
+        document.head.appendChild(ogTitle);
+      }
+
+      const ogDescription = document.querySelector('meta[property="og:description"]') || document.createElement('meta');
+      ogDescription.setAttribute('property', 'og:description');
+      ogDescription.setAttribute('content', post.content ? post.content.substring(0, 160).replace(/<[^>]*>/g, '') : '');
+      if (!document.querySelector('meta[property="og:description"]')) {
+        document.head.appendChild(ogDescription);
+      }
+
+      const ogType = document.querySelector('meta[property="og:type"]') || document.createElement('meta');
+      ogType.setAttribute('property', 'og:type');
+      ogType.setAttribute('content', 'article');
+      if (!document.querySelector('meta[property="og:type"]')) {
+        document.head.appendChild(ogType);
+      }
+    }
+
+    if (schemaData) {
+      // 기존 스키마 제거
+      const existingSchemas = document.querySelectorAll('script[type="application/ld+json"]');
+      existingSchemas.forEach(schema => schema.remove());
+
+      // 새 스키마 추가
+      schemaData.forEach((schema) => {
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.text = JSON.stringify(schema);
+        document.head.appendChild(script);
+      });
+
+      // 컴포넌트 언마운트 시 정리
+      return () => {
+        const schemas = document.querySelectorAll('script[type="application/ld+json"]');
+        schemas.forEach(schema => schema.remove());
+      };
+    }
+  }, [schemaData, post]);
 
   // 페이지 진입시 최상단으로 스크롤
   useEffect(() => {
@@ -32,10 +108,33 @@ function PostDetail() {
   // 콘텐츠 처리 및 목차 추출
   useEffect(() => {
     if (post?.content) {
+      // 디버깅: 원본 콘텐츠 확인
+      console.log("🔍 원본 콘텐츠:", post.content);
+      console.log("🔍 콘텐츠 타입:", typeof post.content);
+      
+      // HTML 엔티티 디코딩 함수
+      const decodeHTMLEntities = (text) => {
+        const textArea = document.createElement('textarea');
+        textArea.innerHTML = text;
+        return textArea.value;
+      };
+      
+      // HTML 엔티티가 포함되어 있는지 확인
+      const hasHTMLEntities = post.content.includes('&lt;') || post.content.includes('&gt;') || post.content.includes('&quot;');
+      
+      if (hasHTMLEntities) {
+        console.log("⚠️ HTML 엔티티 감지됨. 디코딩 진행...");
+      }
+      
+      // HTML 엔티티 디코딩
+      let decodedContent = hasHTMLEntities ? decodeHTMLEntities(post.content) : post.content;
+      
+      console.log("✅ 디코딩된 콘텐츠:", decodedContent);
+      
       // HTML 콘텐츠인지 일반 텍스트인지 확인
-      const isHtml = post.content.includes("<") && post.content.includes(">");
+      const isHtml = decodedContent.includes("<") && decodedContent.includes(">");
 
-      let htmlContent = isHtml ? post.content : textToHtml(post.content);
+      let htmlContent = isHtml ? decodedContent : textToHtml(decodedContent);
 
       // 제목에 ID 추가
       htmlContent = addIdsToHeadings(htmlContent);
@@ -50,9 +149,10 @@ function PostDetail() {
       if (process.env.NODE_ENV === "development") {
         console.log("📝 콘텐츠 처리 완료:", {
           isHtml,
+          hasHTMLEntities,
           contentLength: post.content.length,
           tocItems: tocData.length,
-          toc: tocData,
+          processedContent: htmlContent.substring(0, 200) + "..."
         });
       }
     }

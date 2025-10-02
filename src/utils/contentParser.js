@@ -12,28 +12,26 @@ export function extractTableOfContents(htmlContent) {
   if (!htmlContent) return [];
 
   try {
-    // DOM 파서 생성
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlContent, "text/html");
-
-    // h2, h3, h4 태그 추출
-    const headings = doc.querySelectorAll("h2, h3, h4");
-
-    const toc = Array.from(headings).map((heading, index) => {
-      const text = heading.textContent.trim();
-      const level = parseInt(heading.tagName.charAt(1)); // h2 -> 2
-      const id = `heading-${index}`;
-
-      // 원본 HTML에 id 추가 (나중에 스크롤 타겟으로 사용)
-      heading.id = id;
-
-      return {
-        id,
-        text,
-        level,
-      };
-    });
-
+    const toc = [];
+    const regex = /<h([1-6])\s+[^>]*id="([^"]+)"[^>]*>([^<]+)<\/h[1-6]>/gi;
+    let match;
+    
+    while ((match = regex.exec(htmlContent)) !== null) {
+      const level = parseInt(match[1]);
+      const id = match[2];
+      const text = match[3].trim();
+      
+      // h2, h3, h4만 목차에 포함
+      if (level >= 2 && level <= 4) {
+        toc.push({
+          id,
+          text,
+          level
+        });
+      }
+    }
+    
+    console.log("📚 추출된 목차:", toc);
     return toc;
   } catch (error) {
     console.error("목차 추출 오류:", error);
@@ -50,15 +48,25 @@ export function addIdsToHeadings(htmlContent) {
   if (!htmlContent) return "";
 
   try {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlContent, "text/html");
-    const headings = doc.querySelectorAll("h2, h3, h4");
-
-    headings.forEach((heading, index) => {
-      heading.id = `heading-${index}`;
-    });
-
-    return doc.body.innerHTML;
+    // 정규식으로 제목 태그에 ID 추가
+    let processedContent = htmlContent;
+    let headingIndex = 0;
+    
+    // h1~h6 태그 찾아서 ID 추가
+    processedContent = processedContent.replace(
+      /<h([1-6])(\s+[^>]*)?>([^<]+)<\/h[1-6]>/gi,
+      (match, level, attributes, text) => {
+        const id = `heading-${headingIndex++}`;
+        // 기존 속성이 있으면 유지하면서 ID 추가
+        const attrs = attributes || '';
+        if (attrs.includes('id=')) {
+          return match; // 이미 ID가 있으면 그대로 반환
+        }
+        return `<h${level}${attrs} id="${id}">${text}</h${level}>`;
+      }
+    );
+    
+    return processedContent;
   } catch (error) {
     console.error("HTML 파싱 오류:", error);
     return htmlContent;

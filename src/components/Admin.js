@@ -1,4 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import TextStyle from "@tiptap/extension-text-style";
+import Color from "@tiptap/extension-color";
+import Highlight from "@tiptap/extension-highlight";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
 import PasswordChange from "./PasswordChange";
 import "./Admin.css";
 import {
@@ -9,6 +20,250 @@ import {
   STATUS_LABELS,
 } from "../constants";
 import { useAdmin } from "../hooks";
+import { imageUploadService } from "../services";
+
+// TipTap 툴바 컴포넌트
+const MenuBar = ({ editor }) => {
+  if (!editor) {
+    return null;
+  }
+
+  return (
+    <div className="editor-toolbar">
+      {/* 텍스트 스타일 */}
+      <button
+        onClick={() => editor.chain().focus().toggleBold().run()}
+        disabled={!editor.can().chain().focus().toggleBold().run()}
+        className={editor.isActive("bold") ? "is-active" : ""}
+        title="굵게"
+      >
+        <strong>B</strong>
+      </button>
+      <button
+        onClick={() => editor.chain().focus().toggleItalic().run()}
+        disabled={!editor.can().chain().focus().toggleItalic().run()}
+        className={editor.isActive("italic") ? "is-active" : ""}
+        title="기울임"
+      >
+        <em>I</em>
+      </button>
+      <button
+        onClick={() => editor.chain().focus().toggleStrike().run()}
+        disabled={!editor.can().chain().focus().toggleStrike().run()}
+        className={editor.isActive("strike") ? "is-active" : ""}
+        title="취소선"
+      >
+        <s>S</s>
+      </button>
+
+      <span className="toolbar-divider">|</span>
+
+      {/* 제목 */}
+      <button
+        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+        className={editor.isActive("heading", { level: 2 }) ? "is-active" : ""}
+        title="제목 2"
+      >
+        H2
+      </button>
+      <button
+        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+        className={editor.isActive("heading", { level: 3 }) ? "is-active" : ""}
+        title="제목 3"
+      >
+        H3
+      </button>
+
+      <span className="toolbar-divider">|</span>
+
+      {/* 리스트 */}
+      <button
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        className={editor.isActive("bulletList") ? "is-active" : ""}
+        title="글머리 기호"
+      >
+        •
+      </button>
+      <button
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        className={editor.isActive("orderedList") ? "is-active" : ""}
+        title="번호 매기기"
+      >
+        1.
+      </button>
+
+      <span className="toolbar-divider">|</span>
+
+      {/* 인용구 & 코드 */}
+      <button
+        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+        className={editor.isActive("blockquote") ? "is-active" : ""}
+        title="인용구"
+      >
+        ❝
+      </button>
+      <button
+        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+        className={editor.isActive("codeBlock") ? "is-active" : ""}
+        title="코드 블록"
+      >
+        {"</>"}
+      </button>
+
+      <span className="toolbar-divider">|</span>
+
+      {/* 링크 */}
+      <button
+        onClick={() => {
+          const url = window.prompt("URL을 입력하세요:");
+          if (url) {
+            editor.chain().focus().setLink({ href: url }).run();
+          }
+        }}
+        className={editor.isActive("link") ? "is-active" : ""}
+        title="링크"
+      >
+        🔗
+      </button>
+      <button
+        onClick={() => editor.chain().focus().unsetLink().run()}
+        disabled={!editor.isActive("link")}
+        title="링크 제거"
+      >
+        ✂️
+      </button>
+
+      <span className="toolbar-divider">|</span>
+
+      {/* 이미지 - URL 입력 */}
+      <button
+        onClick={() => {
+          const url = window.prompt("이미지 URL을 입력하세요:");
+          if (url) {
+            editor.chain().focus().setImage({ src: url }).run();
+          }
+        }}
+        title="이미지 URL 삽입"
+      >
+        🔗
+      </button>
+
+      {/* 이미지 - 파일 업로드 */}
+      <label
+        className="editor-toolbar-upload"
+        title="이미지 파일 업로드 (최대 5MB)"
+        style={{
+          padding: "6px 10px",
+          border: "1px solid #d1d5db",
+          background: "white",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontSize: "14px",
+          minWidth: "32px",
+          height: "32px",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "all 0.2s",
+          margin: "0 2px",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = "#f3f4f6";
+          e.currentTarget.style.borderColor = "#9ca3af";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = "white";
+          e.currentTarget.style.borderColor = "#d1d5db";
+        }}
+      >
+        <input
+          type="file"
+          accept="image/*"
+          style={{ display: "none" }}
+          onChange={async (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+
+            try {
+              // 로딩 표시
+              const loadingText = "[📤 이미지 업로드 중...]";
+              editor.chain().focus().insertContent(loadingText).run();
+
+              console.log("🚀 이미지 업로드 시작:", file.name);
+
+              // Supabase Storage에 업로드
+              const result = await imageUploadService.uploadImage(file);
+
+              // 로딩 텍스트 제거
+              editor.chain().focus().undo().run();
+
+              if (result.success && result.url) {
+                console.log("✅ 업로드 성공! URL:", result.url);
+                // 이미지 삽입
+                editor.chain().focus().setImage({ src: result.url }).run();
+              } else {
+                console.error("❌ 업로드 실패:", result.error);
+                alert(result.error || "이미지 업로드에 실패했습니다.");
+              }
+            } catch (error) {
+              console.error("💥 업로드 중 오류:", error);
+              editor.chain().focus().undo().run();
+              alert("이미지 업로드 중 오류가 발생했습니다.");
+            }
+
+            // 입력 초기화 (같은 파일 재선택 가능하도록)
+            e.target.value = "";
+          }}
+        />
+        📤
+      </label>
+
+      <span className="toolbar-divider">|</span>
+
+      {/* 표 */}
+      <button
+        onClick={() =>
+          editor
+            .chain()
+            .focus()
+            .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+            .run()
+        }
+        title="표 삽입"
+      >
+        📊
+      </button>
+
+      <span className="toolbar-divider">|</span>
+
+      {/* 실행 취소/다시 실행 */}
+      <button
+        onClick={() => editor.chain().focus().undo().run()}
+        disabled={!editor.can().chain().focus().undo().run()}
+        title="실행 취소"
+      >
+        ↩️
+      </button>
+      <button
+        onClick={() => editor.chain().focus().redo().run()}
+        disabled={!editor.can().chain().focus().redo().run()}
+        title="다시 실행"
+      >
+        ↪️
+      </button>
+
+      <span className="toolbar-divider">|</span>
+
+      {/* 모두 지우기 */}
+      <button
+        onClick={() => editor.chain().focus().clearNodes().run()}
+        title="서식 지우기"
+      >
+        🧹
+      </button>
+    </div>
+  );
+};
 
 function Admin({ onLogout }) {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -26,6 +281,75 @@ function Admin({ onLogout }) {
     handleDelete,
     updateConsultationStatus,
   } = useAdmin();
+
+  // TipTap 에디터 초기화
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        heading: {
+          levels: [1, 2, 3, 4, 5, 6],
+        },
+      }),
+      Image.configure({
+        HTMLAttributes: {
+          class: "editor-image",
+        },
+      }),
+      Link.configure({
+        openOnClick: false,
+        HTMLAttributes: {
+          target: "_blank",
+          rel: "noopener noreferrer",
+        },
+      }),
+      TextStyle,
+      Color,
+      Highlight.configure({
+        multicolor: true,
+      }),
+      Table.configure({
+        resizable: true,
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
+    ],
+    content: formData.content || "",
+    onUpdate: ({ editor }) => {
+      const html = editor.getHTML();
+      handleFormChange({
+        target: {
+          name: "content",
+          value: html,
+        },
+      });
+    },
+  });
+
+  // formData.content가 변경될 때 에디터 내용 업데이트 (수정 모드)
+  useEffect(() => {
+    if (editor && formData.content !== editor.getHTML()) {
+      editor.commands.setContent(formData.content || "");
+    }
+  }, [editor, formData.content, editingId]);
+
+  // 폼 제출 핸들러 (기존 handleSubmit 래핑)
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    await handleSubmit(e);
+    // 제출 후 에디터 초기화
+    if (editor) {
+      editor.commands.clearContent();
+    }
+  };
+
+  // 취소 핸들러 (에디터 초기화 포함)
+  const handleCancel = () => {
+    handleCancelEdit();
+    if (editor) {
+      editor.commands.clearContent();
+    }
+  };
 
   return (
     <div className="admin-container">
@@ -113,7 +437,7 @@ function Admin({ onLogout }) {
           <>
             <div className="content-header">
               <h1>콘텐츠 관리 시스템</h1>
-              <p>보험 정보 글을 작성하고 관리하세요</p>
+              <p>보험 정보 글을 작성하고 관리하세요 (TipTap 에디터)</p>
             </div>
 
             <div className="editor-section">
@@ -125,7 +449,7 @@ function Admin({ onLogout }) {
                   게시글을 수정하고 있습니다.{" "}
                   <button
                     type="button"
-                    onClick={handleCancelEdit}
+                    onClick={handleCancel}
                     className="btn-cancel-edit"
                   >
                     취소
@@ -133,7 +457,7 @@ function Admin({ onLogout }) {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleFormSubmit}>
                 <div className="form-group">
                   <label>카테고리 선택</label>
                   <select
@@ -160,16 +484,28 @@ function Admin({ onLogout }) {
                 </div>
 
                 <div className="form-group">
-                  <label>본문 내용</label>
-                  <textarea
-                    name="content"
-                    value={formData.content}
-                    onChange={handleFormChange}
-                    className="content-textarea"
-                    placeholder="본문 내용을 입력하세요..."
-                    rows="15"
-                    required
-                  />
+                  <label>본문 내용 (HTML 에디터)</label>
+                  <div className="tiptap-editor-wrapper">
+                    <MenuBar editor={editor} />
+                    <EditorContent
+                      editor={editor}
+                      className="tiptap-editor-content"
+                    />
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.85rem",
+                      color: "#666",
+                      marginTop: "10px",
+                      backgroundColor: "#f0f0f0",
+                      padding: "10px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    💡 팁: 이미지 업로드, 표, 리스트, 제목 스타일 등 다양한
+                    서식을 사용할 수 있습니다. SEO를 위해 H2, H3 태그를
+                    활용해주세요.
+                  </div>
                 </div>
 
                 <div className="form-group">
@@ -188,23 +524,13 @@ function Admin({ onLogout }) {
                   <button type="submit" className="btn btn-primary">
                     {editingId ? "수정하기" : "게시하기"}
                   </button>
-                  {editingId ? (
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      onClick={handleCancelEdit}
-                    >
-                      취소
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      onClick={handleCancelEdit}
-                    >
-                      초기화
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={handleCancel}
+                  >
+                    {editingId ? "취소" : "초기화"}
+                  </button>
                 </div>
               </form>
             </div>
