@@ -60,7 +60,12 @@ function InfoSection({ posts, loading }) {
 
   return (
     <section className="info-section" id="info">
-      <h2 className="section-title">📚 보험 완벽 가이드</h2>
+      <div className="info-section-header">
+        <h2 className="section-title">📚 보험 완벽 가이드</h2>
+        <Link to="/posts" className="btn-view-all">
+          전체 보기 →
+        </Link>
+      </div>
       <div className="info-grid">
         {displayPosts.map((post) => (
           <Link to={`/post/${post.id}`} key={post.id} className="info-card">
@@ -71,6 +76,11 @@ function InfoSection({ posts, loading }) {
             </div>
           </Link>
         ))}
+      </div>
+      <div className="info-section-footer">
+        <Link to="/posts" className="btn-view-all-large">
+          더 많은 보험 정보 보기 →
+        </Link>
       </div>
     </section>
   );

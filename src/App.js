@@ -13,6 +13,7 @@ import ConsultationSection from "./components/ConsultationSection";
 import Footer from "./components/Footer";
 import AdminWrapper from "./components/AdminWrapper";
 import PostDetail from "./components/PostDetail";
+import PostList from "./components/PostList";
 import CompareAuto from "./components/CompareAuto";
 import CompareHealth from "./components/CompareHealth";
 import CompareFamily from "./components/CompareFamily";
@@ -46,6 +47,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<MainPage />} />
+          <Route path="/posts" element={<PostList />} />
           <Route path="/post/:id" element={<PostDetail />} />
           <Route path="/admin" element={<AdminWrapper />} />
           <Route path="/compare/auto" element={<CompareAuto />} />

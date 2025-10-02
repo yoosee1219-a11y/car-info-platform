@@ -225,11 +225,56 @@ nav {
   margin: 0 auto;
 }
 
+.info-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
 .section-title {
   text-align: center;
   font-size: 2rem;
-  margin-bottom: 3rem;
   color: #333;
+}
+
+.btn-view-all {
+  padding: 0.75rem 1.5rem;
+  background: #3b82f6;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-view-all:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.info-section-footer {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.btn-view-all-large {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.btn-view-all-large:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
 }
 
 .info-grid {

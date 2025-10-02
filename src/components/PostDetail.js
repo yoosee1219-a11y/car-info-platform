@@ -184,13 +184,14 @@ function PostDetail() {
             <div className="sidebar-section">
               <h3>📚 보험 완벽 가이드</h3>
               <div className="category-list">
-                <Link to="/" className="category-item all">
+                <Link to="/posts" className="category-item all">
                   전체보기
+                  <span className="count">({categories.reduce((sum, c) => sum + c.count, 0)})</span>
                 </Link>
                 {categories.map((cat) => (
                   <Link
                     key={cat.name}
-                    to={`/category/${encodeURIComponent(cat.name)}`}
+                    to={`/posts?category=${encodeURIComponent(cat.name)}`}
                     className={`category-item ${
                       post.category === cat.name ? "active" : ""
                     }`}
@@ -227,7 +228,12 @@ function PostDetail() {
           <main className="post-main">
             <article className="post-content">
               <div className="post-header">
-                <div className="post-category">{post.category}</div>
+                <Link 
+                  to={`/posts?category=${encodeURIComponent(post.category)}`}
+                  className="post-category"
+                >
+                  {post.category}
+                </Link>
                 <h1 className="post-title">{post.title}</h1>
                 <div className="post-meta">
                   <span>
@@ -264,7 +270,7 @@ function PostDetail() {
 
             {/* 목록으로 버튼 */}
             <div className="back-to-list">
-              <Link to="/" className="btn-back">
+              <Link to="/posts" className="btn-back">
                 📋 목록으로 돌아가기
               </Link>
             </div>
