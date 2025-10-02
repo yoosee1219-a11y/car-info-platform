@@ -6,25 +6,51 @@
 
 /* Hero Section */
 .compare-hero {
-  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-  color: white;
-  padding: 80px 20px 60px;
+  background: linear-gradient(135deg, #FFF4E6 0%, #FFE5CC 100%);
+  color: #1f2937;
+  padding: 80px 20px 100px;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
 }
 
-.compare-hero-content h1 {
-  font-size: 2.5rem;
+.hero-label {
+  color: #FF9966;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hero-title {
+  font-size: 2.8rem;
   font-weight: 700;
-  margin-bottom: 16px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  margin: 0 0 8px 0;
+  color: #1f2937;
 }
 
-.compare-hero-content p {
-  font-size: 1.2rem;
-  opacity: 0.9;
-  max-width: 600px;
-  margin: 0 auto;
+.hero-subtitle {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin: 0 0 40px 0;
+  color: #FF9966;
+}
+
+.hero-car-illustration {
+  font-size: 8rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 /* Container */
@@ -382,14 +408,398 @@
   font-weight: 500;
 }
 
+/* Common Section Styles */
+.section-title {
+  font-size: 2rem;
+  color: #1f2937;
+  margin-bottom: 40px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.section-label {
+  color: #FF9966;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Why Section - 특징 */
+.why-section {
+  margin-bottom: 80px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.feature-card {
+  padding: 50px 40px;
+  border-radius: 16px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-number {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 3rem;
+  font-weight: 700;
+  opacity: 0.3;
+}
+
+.feature-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.feature-subtitle {
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+  font-weight: 600;
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
+.feature-description {
+  font-size: 1rem;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+/* Rider Section - 주요 특약 */
+.rider-section {
+  margin-bottom: 80px;
+}
+
+.riders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 30px;
+}
+
+.rider-item {
+  background: #F9FAFB;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.rider-item:hover {
+  background: #FFF4E6;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(255, 153, 102, 0.2);
+}
+
+.rider-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.rider-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1f2937;
+  text-align: center;
+  white-space: pre-line;
+  line-height: 1.4;
+}
+
+/* Step Section - 진행 단계 */
+.step-section {
+  margin-bottom: 80px;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.step-card {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.step-card:hover {
+  border-color: #FF9966;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(255, 153, 102, 0.2);
+}
+
+.step-icon {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+}
+
+.step-header {
+  margin-bottom: 16px;
+}
+
+.step-label {
+  color: #FF9966;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.step-title {
+  font-size: 1.4rem;
+  color: #1f2937;
+  font-weight: 700;
+  margin: 0;
+}
+
+.step-description {
+  color: #6b7280;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+/* Review Section - 고객 후기 */
+.review-section {
+  margin-bottom: 80px;
+  background: #FFF4E6;
+  padding: 60px 40px;
+  border-radius: 24px;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.review-card {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.review-avatar {
+  width: 50px;
+  height: 50px;
+  background: #F3F4F6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.review-info {
+  flex: 1;
+}
+
+.review-author {
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.review-meta {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.review-rating {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+}
+
+.review-comment {
+  color: #4b5563;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  font-style: italic;
+}
+
+/* FAQ Section */
+.faq-section {
+  margin-bottom: 80px;
+}
+
+.faq-list {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.faq-item.open {
+  box-shadow: 0 4px 16px rgba(255, 153, 102, 0.2);
+}
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.faq-question:hover {
+  background: #FFF4E6;
+}
+
+.faq-q {
+  color: #FF9966;
+  font-size: 1.2rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.faq-text {
+  flex: 1;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.faq-arrow {
+  color: #FF9966;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.faq-answer {
+  padding: 0 24px 24px 24px;
+  color: #4b5563;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  background: #FFF9F5;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.faq-a {
+  color: #FF9966;
+  font-weight: 700;
+  margin-right: 8px;
+}
+
+/* CTA Banner */
+.cta-banner {
+  background: linear-gradient(135deg, #FFF4E6 0%, #FFE5CC 100%);
+  border-radius: 24px;
+  padding: 80px 40px;
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-banner::before {
+  content: "🚗";
+  position: absolute;
+  right: 10%;
+  bottom: 20%;
+  font-size: 8rem;
+  opacity: 0.1;
+  transform: rotate(-15deg);
+}
+
+.cta-banner h2 {
+  font-size: 2.5rem;
+  color: #1f2937;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.cta-banner p {
+  font-size: 1.2rem;
+  color: #4b5563;
+  margin-bottom: 40px;
+  line-height: 1.8;
+}
+
+.cta-banner-button {
+  background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
+  color: white;
+  border: none;
+  padding: 18px 48px;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(255, 153, 102, 0.4);
+}
+
+.cta-banner-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(255, 153, 102, 0.6);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
-  .compare-hero-content h1 {
-    font-size: 1.8rem;
+  .hero-title,
+  .hero-subtitle {
+    font-size: 2rem;
   }
 
-  .compare-hero-content p {
-    font-size: 1rem;
+  .hero-car-illustration {
+    font-size: 5rem;
   }
 
   .comparison-grid {
@@ -402,6 +812,45 @@
 
   .info-grid {
     grid-template-columns: 1fr;
+  }
+
+  .features-grid,
+  .steps-grid,
+  .reviews-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .riders-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .rider-item {
+    width: 120px;
+    height: 120px;
+  }
+
+  .rider-icon {
+    font-size: 2.5rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .feature-card {
+    padding: 40px 30px;
+  }
+
+  .review-section {
+    padding: 40px 20px;
+  }
+
+  .cta-banner {
+    padding: 60px 20px;
+  }
+
+  .cta-banner h2 {
+    font-size: 1.8rem;
   }
 
   .cta-section {
