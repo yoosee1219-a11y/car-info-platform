@@ -261,9 +261,10 @@
     padding: 24px 16px 140px;
   }
 
+  /* 768px 이하: 2열 강제 */
   .car-grid {
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 
   .comparison-bar {
@@ -296,6 +297,7 @@
 }
 
 @media (max-width: 480px) {
+  /* 480px 이하: 1열 */
   .car-grid {
     grid-template-columns: 1fr;
     gap: 16px;

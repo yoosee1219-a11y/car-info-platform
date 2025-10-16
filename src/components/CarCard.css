@@ -259,19 +259,58 @@
 
 /* 반응형 */
 @media (max-width: 768px) {
+  /* 폰트 크기 축소 */
   .car-card-title {
-    font-size: 1.125rem;
+    font-size: 1rem;
   }
 
   .car-card-content {
-    padding: 16px;
+    padding: 12px;
+    gap: 8px;
   }
 
   .car-card-specs {
+    font-size: 0.75rem;
+  }
+
+  /* 버튼 크기 최적화 */
+  .btn {
+    padding: 8px 12px;
     font-size: 0.8125rem;
+  }
+
+  /* 찜 버튼 축소 */
+  .car-card-favorite {
+    width: 36px;
+    height: 36px;
+    font-size: 1.25rem;
+  }
+
+  /* 배지 축소 */
+  .badge {
+    padding: 3px 8px;
+    font-size: 0.6875rem;
+  }
+
+  /* 가격 정보 컴팩트 */
+  .car-card-prices {
+    padding: 10px;
+    gap: 6px;
+  }
+
+  .price-main {
+    font-size: 1rem;
   }
 
   .car-card-actions {
     flex-direction: column;
+    gap: 6px;
+  }
+}
+
+/* 640px 이하: 불필요한 정보 숨김 */
+@media (max-width: 640px) {
+  .car-card-specs .spec-item:last-child {
+    display: none; /* 연비 정보 숨김 */
   }
 }
