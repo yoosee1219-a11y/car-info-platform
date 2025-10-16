@@ -3,6 +3,7 @@
  * 상담 신청 폼 제출을 처리
  */
 
+import toast from "react-hot-toast";
 import { consultationService } from "../services";
 import { CONSULTATION_MESSAGES } from "../constants";
 
@@ -11,10 +12,10 @@ export function useConsultation() {
     const result = await consultationService.create(formData);
 
     if (result.success) {
-      alert(CONSULTATION_MESSAGES.CREATE_SUCCESS);
+      toast.success(CONSULTATION_MESSAGES.CREATE_SUCCESS);
       return true;
     } else {
-      alert(result.error);
+      toast.success(result.error);
       return false;
     }
   };

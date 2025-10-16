@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from "react";
+import toast from "react-hot-toast";
 import bcrypt from "bcryptjs";
 import { commentService } from "../services";
 import { COMMENT_FORM_DEFAULTS, COMMENT_MESSAGES } from "../constants";
@@ -56,7 +57,7 @@ export function useComments(postId) {
       // 1. Rate Limiting 체크
       const rateLimitResult = checkRateLimit("COMMENT");
       if (!rateLimitResult.allowed) {
-        alert(rateLimitResult.error);
+        toast.error(rateLimitResult.error);
         return;
       }
 
@@ -66,26 +67,26 @@ export function useComments(postId) {
         !formData.author_password ||
         !formData.content
       ) {
-        alert(COMMENT_MESSAGES.REQUIRED_FIELDS);
+        toast.error(COMMENT_MESSAGES.REQUIRED_FIELDS);
         return;
       }
 
       // 3. 입력값 검증
       const nameValidation = validateName(formData.author_name);
       if (!nameValidation.valid) {
-        alert(nameValidation.error);
+        toast.error(nameValidation.error);
         return;
       }
 
       const passwordValidation = validatePassword(formData.author_password);
       if (!passwordValidation.valid) {
-        alert(passwordValidation.error);
+        toast.error(passwordValidation.error);
         return;
       }
 
       const contentValidation = validateCommentContent(formData.content);
       if (!contentValidation.valid) {
-        alert(contentValidation.error);
+        toast.error(contentValidation.error);
         return;
       }
 
@@ -104,11 +105,11 @@ export function useComments(postId) {
       const result = await commentService.create(commentData);
 
       if (result.success) {
-        alert(COMMENT_MESSAGES.CREATE_SUCCESS);
+        toast.success(COMMENT_MESSAGES.CREATE_SUCCESS);
         setFormData(COMMENT_FORM_DEFAULTS);
         fetchComments();
       } else {
-        alert(result.error);
+        toast.error(result.error);
       }
     },
     [formData, postId, fetchComments]
@@ -121,14 +122,14 @@ export function useComments(postId) {
 
       // 1. 비밀번호 입력 확인
       if (!password) {
-        alert(COMMENT_MESSAGES.PASSWORD_REQUIRED);
+        toast.error(COMMENT_MESSAGES.PASSWORD_REQUIRED);
         return;
       }
 
       // 2. 비밀번호 검증
       const passwordValidation = validatePassword(password);
       if (!passwordValidation.valid) {
-        alert(passwordValidation.error);
+        toast.error(passwordValidation.error);
         return;
       }
 
@@ -137,7 +138,7 @@ export function useComments(postId) {
         const isPasswordValid = await bcrypt.compare(password, hashedPassword);
 
         if (!isPasswordValid) {
-          alert(COMMENT_MESSAGES.PASSWORD_MISMATCH);
+          toast.error(COMMENT_MESSAGES.PASSWORD_MISMATCH);
           return;
         }
 
@@ -148,16 +149,16 @@ export function useComments(postId) {
         const result = await commentService.delete(commentId);
 
         if (result.success) {
-          alert(COMMENT_MESSAGES.DELETE_SUCCESS);
+          toast.success(COMMENT_MESSAGES.DELETE_SUCCESS);
           setShowDeleteInput({ ...showDeleteInput, [commentId]: false });
           setDeletePassword({ ...deletePassword, [commentId]: "" });
           fetchComments();
         } else {
-          alert(result.error);
+          toast.error(result.error);
         }
       } catch (error) {
         console.error("댓글 삭제 오류:", error);
-        alert(COMMENT_MESSAGES.DELETE_ERROR);
+        toast.error(COMMENT_MESSAGES.DELETE_ERROR);
       }
     },
     [deletePassword, showDeleteInput, fetchComments]

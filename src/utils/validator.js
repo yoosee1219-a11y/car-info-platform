@@ -322,6 +322,24 @@ export const validateConsultationData = (consultationData) => {
     }
   }
 
+  // 통화 가능 시간 검증 (필수)
+  if (
+    !consultationData.available_time ||
+    consultationData.available_time.trim().length === 0
+  ) {
+    errors.available_time = "통화 가능 시간을 선택해주세요.";
+  }
+
+  // 지역 검증 (필수)
+  if (!consultationData.region || consultationData.region.trim().length === 0) {
+    errors.region = "지역을 선택해주세요.";
+  }
+
+  // 차량 모델 검증 (선택적, 길이 제한)
+  if (consultationData.car_model && consultationData.car_model.length > 50) {
+    errors.car_model = "차량 모델은 50자 이하로 입력해주세요.";
+  }
+
   // 상담 내용 검증 (선택적)
   if (consultationData.message && consultationData.message.length > 1000) {
     errors.message = "상담 내용은 1000자 이하로 입력해주세요.";

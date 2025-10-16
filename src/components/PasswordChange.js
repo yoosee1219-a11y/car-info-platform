@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import bcrypt from "bcryptjs";
 import { supabase } from "../supabaseClient";
 import "./PasswordChange.css";
@@ -31,7 +32,11 @@ function PasswordChange() {
 
     try {
       // 1. 입력값 검증
-      if (!formData.currentPassword || !formData.newPassword || !formData.confirmPassword) {
+      if (
+        !formData.currentPassword ||
+        !formData.newPassword ||
+        !formData.confirmPassword
+      ) {
         setError("모든 항목을 입력해주세요.");
         setIsLoading(false);
         return;
@@ -109,7 +114,7 @@ function PasswordChange() {
 
       // 10. 3초 후 세션 초기화 및 로그아웃 (보안을 위해)
       setTimeout(() => {
-        alert("보안을 위해 다시 로그인해주세요.");
+        toast.error("보안을 위해 다시 로그인해주세요.");
         sessionStorage.removeItem("adminToken");
         sessionStorage.removeItem("adminUser");
         window.location.reload();

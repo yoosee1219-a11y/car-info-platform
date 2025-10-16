@@ -1,31 +1,40 @@
 import React, { useState } from "react";
 import "./Login.css";
-import { authService } from "../services";
+import { authService } from "../services/authService";
 
 function Login({ onLoginSuccess }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("stryper11");
+  const [password, setPassword] = useState("dbsdudgns0)");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
+    console.log("🚀 [Login.js] handleSubmit 시작");
     e.preventDefault();
+    console.log("🚀 [Login.js] preventDefault 완료");
     setError("");
     setIsLoading(true);
+    console.log("🚀 [Login.js] 상태 업데이트 완료, authService 호출 시작");
 
-    const result = await authService.login(username, password);
+    try {
+      const result = await authService.loginUser(username, password);
+      console.log("🚀 [Login.js] authService 결과:", result);
 
-    if (result.success) {
-      // 토큰과 사용자 정보 저장
-      sessionStorage.setItem("adminToken", result.data.token);
-      sessionStorage.setItem("adminUser", result.data.username);
+      if (result.success) {
+        // 상위 래퍼에 상태 전달하여 즉시 인증 상태 업데이트
+        onLoginSuccess(result.data.token, result.data.user);
+      } else {
+        console.warn("❌ [Login.js] 로그인 실패:", result.error);
+        setError(result.error);
+      }
 
-      onLoginSuccess();
-    } else {
-      setError(result.error);
+      setIsLoading(false);
+      console.log("🚀 [Login.js] handleSubmit 완료");
+    } catch (error) {
+      console.error("🔥 [Login.js] 예외 발생:", error);
+      setError("로그인 중 오류가 발생했습니다.");
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (

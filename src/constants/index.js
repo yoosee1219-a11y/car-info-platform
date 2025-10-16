@@ -3,15 +3,24 @@
  * 다른 파일에서 import 시 편의성을 위한 re-export
  */
 
-// 보험 관련
+// 차량 관련
 export {
-  INSURANCE_TYPES,
-  INSURANCE_TYPE_LIST,
+  CAR_BRANDS,
+  CAR_BRAND_LIST,
+  SERVICE_TYPES,
+  SERVICE_TYPE_LIST,
+  AVAILABLE_TIMES,
+  AVAILABLE_TIME_LIST,
   POST_CATEGORIES,
   POST_CATEGORY_LIST,
   DEFAULT_CATEGORY,
-  DEFAULT_INSURANCE_TYPE,
-} from "./insurance";
+  DEFAULT_CAR_BRAND,
+  DEFAULT_SERVICE_TYPE,
+  DEFAULT_AVAILABLE_TIME,
+} from "./car";
+
+// 지역 관련
+export { REGIONS, REGION_LIST, DEFAULT_REGION } from "./regions";
 
 // 상태 관련
 export {
@@ -37,3 +46,6 @@ export {
   COMMENT_FORM_DEFAULTS,
   LOGIN_FORM_DEFAULTS,
 } from "./formDefaults";
+
+// AGO 패턴 관련
+export * from "./agoPatterns";

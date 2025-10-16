@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { supabase } from "../supabaseClient";
 
 function QuickQuote() {
@@ -76,12 +77,7 @@ function QuickQuote() {
     },
   ];
 
-  // 찜하기 목록 로드
-  useEffect(() => {
-    loadFavorites();
-  }, []);
-
-  const loadFavorites = async () => {
+  const loadFavorites = useCallback(async () => {
     try {
       const userId = getUserId();
       const { data, error } = await supabase
@@ -102,7 +98,12 @@ function QuickQuote() {
       console.error("오류:", error);
       console.error("오류 상세:", error.message);
     }
-  };
+  }, []);
+
+  // 찜하기 목록 로드
+  useEffect(() => {
+    loadFavorites();
+  }, [loadFavorites]);
 
   // 찜하기 토글
   const toggleFavorite = async (e, insuranceType) => {
@@ -154,9 +155,7 @@ function QuickQuote() {
     } catch (error) {
       console.error("찜하기 오류:", error);
       console.error("전체 오류 객체:", JSON.stringify(error, null, 2));
-      alert(
-        `찜하기 처리 중 오류가 발생했습니다.\n\n콘솔을 확인해주세요. (F12)`
-      );
+      toast.error("찜하기 처리 중 오류가 발생했습니다.");
     } finally {
       setLoading(false);
     }

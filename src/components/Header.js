@@ -65,14 +65,14 @@ function Header() {
     <header>
       <nav>
         <Link to="/" className="logo">
-          🏦 보험이지
+          🚗 카인포
         </Link>
 
         {/* 검색창 */}
         <div className="header-search">
           <input
             type="text"
-            placeholder="보험 정보 검색..."
+            placeholder="차량 정보 검색..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={handleSearchKeyPress}
@@ -103,7 +103,7 @@ function Header() {
                 scrollToSection("#info");
               }}
             >
-              보험정보
+              차량정보
             </a>
           </li>
           <li>
@@ -114,7 +114,7 @@ function Header() {
                 scrollToSection("#compare");
               }}
             >
-              보험비교
+              차량비교
             </a>
           </li>
           <li>
@@ -142,7 +142,7 @@ function Header() {
               }}
               className="cta-button"
             >
-              무료 견적받기
+              상담 신청
             </a>
           </li>
         </ul>
@@ -155,7 +155,7 @@ function Header() {
           }}
           className="cta-button desktop-cta"
         >
-          무료 견적받기
+          상담 신청
         </a>
       </nav>
     </header>

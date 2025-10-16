@@ -1,38 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Login from "./Login";
 import Admin from "./Admin";
+import { useAuthentication } from "../hooks/useAuthentication";
 
 function AdminWrapper() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const { isAuthenticated, isLoading, login, logout } = useAuthentication();
 
-  useEffect(() => {
-    // 로그인 상태 확인
-    checkAuthentication();
-  }, []);
-
-  const checkAuthentication = () => {
-    const token = sessionStorage.getItem("adminToken");
-    const user = sessionStorage.getItem("adminUser");
-
-    // 토큰과 사용자 정보가 있으면 로그인 상태로 간주
-    if (token && user) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-
-    setIsLoading(false);
-  };
-
-  const handleLoginSuccess = () => {
-    setIsAuthenticated(true);
-  };
-
-  const handleLogout = () => {
-    sessionStorage.removeItem("adminToken");
-    sessionStorage.removeItem("adminUser");
-    setIsAuthenticated(false);
+  const handleLoginSuccess = (token, userData) => {
+    login(token, userData);
   };
 
   if (isLoading) {
@@ -55,7 +30,7 @@ function AdminWrapper() {
     return <Login onLoginSuccess={handleLoginSuccess} />;
   }
 
-  return <Admin onLogout={handleLogout} />;
+  return <Admin onLogout={logout} />;
 }
 
 export default AdminWrapper;

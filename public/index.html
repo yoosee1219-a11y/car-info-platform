@@ -1,14 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#6366f1" />
+
+    <!-- 기본 메타데이터 -->
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="차량 정보부터 장기 렌터카/리스 상담까지, 모든 차량 정보를 한 곳에서 - 카인포. 현대, 기아, 제네시스 등 최신 차량 정보와 렌터카 비교 서비스 제공"
     />
+    <meta
+      name="keywords"
+      content="차량정보, 렌터카, 리스, 자동차비교, 현대차, 기아차, 제네시스, 장기렌터카, 리스상담, 차량스펙, 자동차가격, 신차정보"
+    />
+    <meta name="author" content="카인포" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph 메타데이터 (소셜 미디어) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="카인포 - 차량 정보 플랫폼" />
+    <meta
+      property="og:description"
+      content="차량 정보부터 장기 렌터카/리스 상담까지, 모든 차량 정보를 한 곳에서"
+    />
+    <meta property="og:url" content="https://carinfo.co.kr" />
+    <meta property="og:site_name" content="카인포" />
+    <meta
+      property="og:image"
+      content="%PUBLIC_URL%/images/cars/placeholder.svg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="ko_KR" />
+
+    <!-- Twitter Card 메타데이터 -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="카인포 - 차량 정보 플랫폼" />
+    <meta
+      name="twitter:description"
+      content="차량 정보부터 장기 렌터카/리스 상담까지, 모든 차량 정보를 한 곳에서"
+    />
+    <meta
+      name="twitter:image"
+      content="%PUBLIC_URL%/images/cars/placeholder.svg"
+    />
+
+    <!-- 추가 SEO 메타데이터 -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="카인포" />
+
+    <!-- 지리적 타겟팅 -->
+    <meta name="geo.region" content="KR" />
+    <meta name="geo.placename" content="대한민국" />
+    <meta name="geo.position" content="37.5665;126.9780" />
+    <meta name="ICBM" content="37.5665, 126.9780" />
+
+    <!-- 캐노니컬 URL -->
+    <link rel="canonical" href="https://carinfo.co.kr" />
+
+    <!-- 언어 설정 -->
+    <link rel="alternate" hreflang="ko" href="https://carinfo.co.kr" />
+    <link rel="alternate" hreflang="x-default" href="https://carinfo.co.kr" />
+
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -30,16 +88,68 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3152894563346753"
       crossorigin="anonymous"
     ></script>
-    
+
     <!-- Kakao SDK for sharing -->
-    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
+    <script
+      src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
       integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4"
-      crossorigin="anonymous"></script>
-    
-    <title>보험이지 - 보험 비교 플랫폼</title>
+      crossorigin="anonymous"
+    ></script>
+
+    <title>카인포 - 차량 정보 플랫폼 | 렌터카 리스 상담</title>
+
+    <!-- 구조화된 데이터 (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "카인포",
+        "alternateName": "카인포 - 차량 정보 플랫폼",
+        "url": "https://carinfo.co.kr",
+        "description": "차량 정보부터 장기 렌터카/리스 상담까지, 모든 차량 정보를 한 곳에서",
+        "inLanguage": "ko-KR",
+        "publisher": {
+          "@type": "Organization",
+          "name": "카인포",
+          "url": "https://carinfo.co.kr",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://carinfo.co.kr/logo192.png"
+          }
+        },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://carinfo.co.kr/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        },
+        "mainEntity": {
+          "@type": "ItemList",
+          "name": "차량 정보 목록",
+          "description": "현대, 기아, 제네시스 등 최신 차량 정보와 렌터카 비교 서비스"
+        }
+      }
+    </script>
+
+    <!-- Google Search Console -->
+    <meta
+      name="google-site-verification"
+      content="YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE"
+    />
+
+    <!-- Naver Search Advisor -->
+    <meta
+      name="naver-site-verification"
+      content="YOUR_NAVER_SEARCH_ADVISOR_VERIFICATION_CODE"
+    />
+
+    <!-- Daum Search Advisor -->
+    <meta
+      name="daum-site-verification"
+      content="YOUR_DAUM_SEARCH_ADVISOR_VERIFICATION_CODE"
+    />
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>JavaScript를 활성화해야 이 앱을 실행할 수 있습니다.</noscript>
     <div id="root"></div>
     <!--
       This HTML file is a template.

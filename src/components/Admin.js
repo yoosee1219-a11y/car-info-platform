@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
@@ -11,6 +12,7 @@ import TableRow from "@tiptap/extension-table-row";
 import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import PasswordChange from "./PasswordChange";
+import ContentQualityChecker from "./ContentQualityChecker";
 import "./Admin.css";
 import {
   POST_CATEGORY_LIST,
@@ -290,12 +292,12 @@ const MenuBar = ({ editor }) => {
                 editor.chain().focus().setImage({ src: result.url }).run();
               } else {
                 console.error("❌ 업로드 실패:", result.error);
-                alert(result.error || "이미지 업로드에 실패했습니다.");
+                toast.error(result.error || "이미지 업로드에 실패했습니다.");
               }
             } catch (error) {
               console.error("💥 업로드 중 오류:", error);
               editor.chain().focus().undo().run();
-              alert("이미지 업로드 중 오류가 발생했습니다.");
+              toast.error("이미지 업로드 중 오류가 발생했습니다.");
             }
 
             // 입력 초기화 (같은 파일 재선택 가능하도록)
@@ -590,7 +592,7 @@ function Admin({ onLogout }) {
     <div className="admin-container">
       {/* 사이드바 */}
       <aside className="sidebar">
-        <h2>🏦 보험이지 관리자</h2>
+        <h2>🚗 카인포 관리자</h2>
         <div
           className={`menu-item ${activeTab === "dashboard" ? "active" : ""}`}
           onClick={() => setActiveTab("dashboard")}
@@ -631,7 +633,7 @@ function Admin({ onLogout }) {
           <>
             <div className="content-header">
               <h1>대시보드</h1>
-              <p>보험이지 운영 현황을 한눈에 확인하세요</p>
+              <p>카인포 운영 현황을 한눈에 확인하세요</p>
             </div>
 
             <div className="stats-grid">
@@ -672,12 +674,12 @@ function Admin({ onLogout }) {
           <>
             <div className="content-header">
               <h1>콘텐츠 관리 시스템</h1>
-              <p>보험 정보 글을 작성하고 관리하세요 (TipTap 에디터)</p>
+              <p>차량 정보 글을 작성하고 관리하세요 (TipTap 에디터)</p>
             </div>
 
             <div className="editor-section">
               <h2>
-                {editingId ? "📝 보험 정보 글 수정" : "✍️ 새 보험 정보 글 작성"}
+                {editingId ? "📝 차량 정보 글 수정" : "✍️ 새 차량 정보 글 작성"}
               </h2>
               {editingId && (
                 <div className="edit-notice">
@@ -713,7 +715,7 @@ function Admin({ onLogout }) {
                     name="title"
                     value={formData.title}
                     onChange={handleFormChange}
-                    placeholder="예: 2024년 자동차보험 할인 특약 총정리"
+                    placeholder="예: 2025년 인기 SUV 추천 베스트 5"
                     required
                   />
                 </div>
@@ -822,13 +824,24 @@ function Admin({ onLogout }) {
                       name="is_published"
                       checked={formData.is_published}
                       onChange={handleFormChange}
-                      style={{ width: "20px", height: "20px", cursor: "pointer" }}
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        cursor: "pointer",
+                      }}
                     />
                     <span style={{ fontWeight: 500, fontSize: "1rem" }}>
                       즉시 발행
                     </span>
                   </label>
-                  <small style={{ color: "#6b7280", fontSize: "0.85rem", marginTop: "0.5rem", display: "block" }}>
+                  <small
+                    style={{
+                      color: "#6b7280",
+                      fontSize: "0.85rem",
+                      marginTop: "0.5rem",
+                      display: "block",
+                    }}
+                  >
                     💡 체크하면 바로 발행되며, 해제하면 임시저장됩니다
                   </small>
                 </div>
@@ -847,6 +860,16 @@ function Admin({ onLogout }) {
                 </div>
               </form>
             </div>
+
+            {/* 콘텐츠 품질 체커 */}
+            <ContentQualityChecker
+              content={editor?.getHTML() || ""}
+              title={formData.title}
+              onScreenshot={(fileName, dataUrl) => {
+                console.log("스크린샷 저장됨:", fileName);
+                toast.success(`스크린샷이 저장되었습니다: ${fileName}`);
+              }}
+            />
 
             {/* 게시글 목록 */}
             <div className="content-list" style={{ marginTop: "3rem" }}>
@@ -963,10 +986,18 @@ function Admin({ onLogout }) {
                   <div key={consult.id} className="list-item">
                     <div className="item-info">
                       <h3>
-                        {consult.name} - {consult.insurance_type}
+                        {consult.name} - {consult.car_brand}{" "}
+                        {consult.car_model || ""}
                       </h3>
                       <div className="item-meta">
                         📞 {consult.phone} | ✉️ {consult.email || "이메일 없음"}
+                      </div>
+                      <div
+                        className="item-meta"
+                        style={{ marginTop: "0.5rem" }}
+                      >
+                        🚗 {consult.service_type} | 🕐 {consult.available_time}{" "}
+                        | 📍 {consult.region}
                       </div>
                       <div style={{ marginTop: "0.5rem", color: "#666" }}>
                         {consult.message || "메시지 없음"}

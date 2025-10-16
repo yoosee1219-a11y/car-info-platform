@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from "react";
+import toast from "react-hot-toast";
 import { postService, consultationService } from "../services";
 import {
   POST_MESSAGES,
@@ -27,7 +28,7 @@ export function useAdmin() {
     if (postsResult.success) {
       setPosts(postsResult.data);
     } else {
-      alert(postsResult.error);
+      toast.success(postsResult.error);
     }
 
     // 상담 문의 가져오기
@@ -35,7 +36,7 @@ export function useAdmin() {
     if (consultResult.success) {
       setConsultations(consultResult.data);
     } else {
-      alert(consultResult.error);
+      toast.success(consultResult.error);
     }
 
     setLoading(false);
@@ -71,7 +72,7 @@ export function useAdmin() {
       }
 
       if (result.success) {
-        alert(
+        toast.success(
           editingId
             ? POST_MESSAGES.UPDATE_SUCCESS
             : POST_MESSAGES.CREATE_SUCCESS
@@ -80,7 +81,7 @@ export function useAdmin() {
         setFormData(POST_FORM_DEFAULTS);
         fetchData();
       } else {
-        alert(result.error);
+        toast.success(result.error);
       }
     },
     [editingId, formData, fetchData]
@@ -113,10 +114,10 @@ export function useAdmin() {
       const result = await postService.delete(id);
 
       if (result.success) {
-        alert(POST_MESSAGES.DELETE_SUCCESS);
+        toast.success(POST_MESSAGES.DELETE_SUCCESS);
         fetchData();
       } else {
-        alert(result.error);
+        toast.success(result.error);
       }
     },
     [fetchData]
@@ -128,10 +129,10 @@ export function useAdmin() {
       const result = await consultationService.updateStatus(id, status);
 
       if (result.success) {
-        alert(CONSULTATION_MESSAGES.UPDATE_SUCCESS);
+        toast.success(CONSULTATION_MESSAGES.UPDATE_SUCCESS);
         fetchData();
       } else {
-        alert(result.error);
+        toast.success(result.error);
       }
     },
     [fetchData]

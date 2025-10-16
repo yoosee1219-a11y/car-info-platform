@@ -1,183 +1,142 @@
 /**
  * 인증 관련 API 서비스
  * 로그인, 비밀번호 변경 등 인증 관련 작업을 처리
+ * admin_users 테이블 기반 인증 사용
  */
 
+import { supabase, isSupabaseConfigured } from "../supabaseClient";
 import bcrypt from "bcryptjs";
-import { supabase } from "../supabaseClient";
-import {
-  handleApiError,
-  createSuccessResult,
-  checkSupabaseResponse,
-} from "../utils/errorHandler";
-import { validateUsername, validatePassword } from "../utils/validator";
-import { checkRateLimit, resetRateLimit } from "../utils/rateLimiter";
-import { AUTH_MESSAGES } from "../constants";
+
+// 세션 스토리지 유틸리티 함수들
+const saveSession = (token) => {
+  try {
+    sessionStorage.setItem("adminToken", token);
+  } catch (error) {
+    console.warn("세션 스토리지 저장 실패:", error);
+  }
+};
+
+const loadSession = () => {
+  try {
+    return sessionStorage.getItem("adminToken");
+  } catch (error) {
+    console.warn("세션 스토리지 읽기 실패:", error);
+    return null;
+  }
+};
+
+const clearSession = () => {
+  try {
+    sessionStorage.removeItem("adminToken");
+  } catch (error) {
+    console.warn("세션 스토리지 삭제 실패:", error);
+  }
+};
+
+const saveUserData = (userData) => {
+  try {
+    sessionStorage.setItem("adminUser", JSON.stringify(userData));
+  } catch (error) {
+    console.warn("사용자 데이터 저장 실패:", error);
+  }
+};
+
+const loadUserData = () => {
+  try {
+    const data = sessionStorage.getItem("adminUser");
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    console.warn("사용자 데이터 읽기 실패:", error);
+    return null;
+  }
+};
+
+const clearUserData = () => {
+  try {
+    sessionStorage.removeItem("adminUser");
+  } catch (error) {
+    console.warn("사용자 데이터 삭제 실패:", error);
+  }
+};
 
 export const authService = {
-  /**
-   * 관리자 로그인
-   * @param {string} username - 사용자 아이디
-   * @param {string} password - 비밀번호
-   * @returns {Promise<Object>}
-   */
-  login: async (username, password) => {
+  async loginUser(username, password) {
+    console.log(`🔐 로그인 시도: ${username}`);
+
+    if (!isSupabaseConfigured) {
+      console.log("📡 Supabase 미설정: 로그인 불가");
+      return { success: false, error: "데이터베이스가 설정되지 않았습니다" };
+    }
+
+    console.log("📡 Supabase 설정 확인 완료");
     try {
-      // 1. Rate Limiting 체크
-      const rateLimitResult = checkRateLimit("LOGIN");
-      if (!rateLimitResult.allowed) {
-        return {
-          success: false,
-          error: rateLimitResult.error,
-        };
-      }
+      console.log("🔍 admin_users 테이블에서 사용자 조회 중...");
 
-      // 2. 입력값 검증
-      if (!username || !password) {
-        return {
-          success: false,
-          error: AUTH_MESSAGES.REQUIRED_FIELDS,
-        };
-      }
-
-      // 사용자명 검증
-      const usernameValidation = validateUsername(username);
-      if (!usernameValidation.valid) {
-        return {
-          success: false,
-          error: usernameValidation.error,
-        };
-      }
-
-      // 비밀번호 검증
-      const passwordValidation = validatePassword(password);
-      if (!passwordValidation.valid) {
-        return {
-          success: false,
-          error: passwordValidation.error,
-        };
-      }
-
-      // 3. Supabase에서 관리자 정보 가져오기
-      const response = await supabase
+      // admin_users 테이블에서 username으로 사용자 조회
+      const { data, error } = await supabase
         .from("admin_users")
-        .select("username, password_hash")
+        .select("*")
         .eq("username", username)
         .single();
 
-      if (response.error || !response.data) {
-        return {
-          success: false,
-          error: AUTH_MESSAGES.INVALID_CREDENTIALS,
-        };
+      if (error || !data) {
+        console.error("❌ 사용자 조회 실패:", error?.message || "사용자 없음");
+        return { success: false, error: "사용자를 찾을 수 없습니다" };
       }
 
-      // 4. 비밀번호 확인 (해시 비교)
+      console.log("✅ 사용자 발견:", data.username);
+      console.log("🔑 비밀번호 검증 중...");
+
+      // bcrypt로 비밀번호 검증
       const isPasswordValid = await bcrypt.compare(
         password,
-        response.data.password_hash
+        data.password_hash
       );
 
       if (!isPasswordValid) {
-        return {
-          success: false,
-          error: AUTH_MESSAGES.INVALID_CREDENTIALS,
-        };
+        console.warn("❌ 비밀번호 불일치");
+        return { success: false, error: "비밀번호가 일치하지 않습니다" };
       }
 
-      // 5. 로그인 성공 - 강력한 토큰 생성
-      const tokenData = {
-        username: username,
-        timestamp: Date.now(),
-        random: Math.random().toString(36).substring(2),
+      console.log("✅ 비밀번호 검증 성공!");
+
+      // 토큰 생성 (간단하게 username을 Base64로 인코딩)
+      const token = btoa(`${username}:${Date.now()}`);
+      const userData = {
+        id: data.id,
+        username: data.username,
+        role: "admin",
+        created_at: data.created_at,
       };
-      const loginToken = btoa(JSON.stringify(tokenData));
 
-      // 6. Rate Limit 초기화 (로그인 성공)
-      resetRateLimit("LOGIN");
+      saveSession(token);
+      saveUserData(userData);
 
-      return createSuccessResult({
-        token: loginToken,
-        username: username,
-      });
+      console.log("✅ 로그인 완료!");
+      return { success: true, data: { token, user: userData } };
     } catch (error) {
-      return handleApiError(error, AUTH_MESSAGES.LOGIN_ERROR);
+      console.error("🚨 로그인 중 예외 발생:", error.message);
+      return { success: false, error: error.message };
     }
   },
 
-  /**
-   * 비밀번호 변경
-   * @param {string} username - 사용자 아이디
-   * @param {string} currentPassword - 현재 비밀번호
-   * @param {string} newPassword - 새 비밀번호
-   * @returns {Promise<Object>}
-   */
-  changePassword: async (username, currentPassword, newPassword) => {
-    try {
-      // 1. 현재 비밀번호 확인
-      const loginResult = await authService.login(username, currentPassword);
+  async checkAuthStatus() {
+    const token = loadSession();
+    const userData = loadUserData();
 
-      if (!loginResult.success) {
-        return {
-          success: false,
-          error: "현재 비밀번호가 올바르지 않습니다.",
-        };
-      }
-
-      // 2. 새 비밀번호 해싱
-      const newPasswordHash = await bcrypt.hash(newPassword, 10);
-
-      // 3. 비밀번호 업데이트
-      const response = await supabase
-        .from("admin_users")
-        .update({ password_hash: newPasswordHash })
-        .eq("username", username);
-
-      checkSupabaseResponse(response, AUTH_MESSAGES.PASSWORD_CHANGE_ERROR);
-
-      return createSuccessResult(null);
-    } catch (error) {
-      return handleApiError(error, AUTH_MESSAGES.PASSWORD_CHANGE_ERROR);
-    }
-  },
-
-  /**
-   * 로그아웃 (세션 스토리지 정리)
-   * @returns {Object}
-   */
-  logout: () => {
-    try {
-      sessionStorage.removeItem("adminToken");
-      sessionStorage.removeItem("adminUser");
-
-      return createSuccessResult(null);
-    } catch (error) {
-      return handleApiError(error, "로그아웃에 실패했습니다");
-    }
-  },
-
-  /**
-   * 로그인 상태 확인
-   * @returns {boolean}
-   */
-  isAuthenticated: () => {
-    const token = sessionStorage.getItem("adminToken");
-    const user = sessionStorage.getItem("adminUser");
-    return !!(token && user);
-  },
-
-  /**
-   * 현재 로그인한 사용자 정보 가져오기
-   * @returns {Object|null}
-   */
-  getCurrentUser: () => {
-    const user = sessionStorage.getItem("adminUser");
-    const token = sessionStorage.getItem("adminToken");
-
-    if (user && token) {
-      return { username: user, token };
+    if (token && userData && userData.username) {
+      console.log("✅ 인증 상태: 로그인됨", userData.username);
+      return { isAuthenticated: true, user: userData };
     }
 
-    return null;
+    console.log("❌ 인증 상태: 로그아웃");
+    return { isAuthenticated: false, user: null };
+  },
+
+  async logoutUser() {
+    clearSession();
+    clearUserData();
+    console.log("👋 로그아웃 완료");
+    return { success: true };
   },
 };

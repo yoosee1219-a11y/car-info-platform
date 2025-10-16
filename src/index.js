@@ -1,13 +1,36 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Toaster } from "react-hot-toast";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <App />
+    <Toaster
+      position="top-right"
+      toastOptions={{
+        duration: 4000,
+        style: {
+          background: "#363636",
+          color: "#fff",
+          fontFamily:
+            "Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif",
+        },
+        success: {
+          style: {
+            background: "#10b981",
+          },
+        },
+        error: {
+          style: {
+            background: "#ef4444",
+          },
+        },
+      }}
+    />
   </React.StrictMode>
 );
 

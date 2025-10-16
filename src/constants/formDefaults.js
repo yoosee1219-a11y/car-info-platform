@@ -3,7 +3,13 @@
  * 폼 초기화 시 사용되는 기본값을 한 곳에서 관리
  */
 
-import { DEFAULT_CATEGORY, DEFAULT_INSURANCE_TYPE } from "./insurance";
+import {
+  DEFAULT_CATEGORY,
+  DEFAULT_CAR_BRAND,
+  DEFAULT_SERVICE_TYPE,
+  DEFAULT_AVAILABLE_TIME,
+} from "./car";
+import { DEFAULT_REGION } from "./regions";
 
 // 게시글 폼 초기값
 export const POST_FORM_DEFAULTS = {
@@ -20,7 +26,11 @@ export const CONSULTATION_FORM_DEFAULTS = {
   name: "",
   phone: "",
   email: "",
-  insurance_type: DEFAULT_INSURANCE_TYPE,
+  car_brand: DEFAULT_CAR_BRAND,
+  car_model: "",
+  service_type: DEFAULT_SERVICE_TYPE,
+  available_time: DEFAULT_AVAILABLE_TIME,
+  region: DEFAULT_REGION,
   message: "",
 };
 

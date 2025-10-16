@@ -48,7 +48,7 @@ export const CONSULTATION_MESSAGES = {
   CREATE_ERROR: "상담 신청 중 오류가 발생했습니다.",
   UPDATE_SUCCESS: "상태가 업데이트되었습니다.",
   UPDATE_ERROR: "상태 업데이트 실패",
-  REQUIRED_FIELDS: "이름과 전화번호는 필수입니다.",
+  REQUIRED_FIELDS: "이름, 전화번호, 통화 가능 시간, 지역은 필수입니다.",
   NO_CONSULTATIONS: "아직 상담 문의가 없습니다.",
 };
 
@@ -58,4 +58,31 @@ export const GENERAL_MESSAGES = {
   RETRY: "잠시 후 다시 시도해주세요.",
   LOADING: "로딩 중...",
   NO_DATA: "데이터가 없습니다.",
+  SUCCESS: "성공적으로 처리되었습니다.",
+  CONFIRM: "정말로 진행하시겠습니까?",
+  CANCEL: "취소되었습니다.",
+};
+
+// 차량 관련 메시지
+export const CAR_MESSAGES = {
+  NOT_FOUND: "차량 정보를 찾을 수 없습니다.",
+  COMPARISON_LIMIT: "최대 3대까지만 비교할 수 있습니다.",
+  COMPARISON_ADDED: "비교 목록에 추가되었습니다.",
+  COMPARISON_REMOVED: "비교 목록에서 제거되었습니다.",
+  COMPARISON_CLEAR: "비교 목록이 모두 삭제되었습니다.",
+  COMPARISON_PAGE_PREP: "비교 페이지는 준비 중입니다! 곧 완성됩니다 🚀",
+  LOADING_CARS: "차량 데이터를 불러오는 중...",
+  SHEETS_ERROR: "Google Sheets 연동에 실패했습니다. 샘플 데이터를 사용합니다.",
+  SHEETS_SUCCESS: "Google Sheets 데이터가 업데이트되었습니다.",
+  REFRESH_SUCCESS: "데이터가 새로고침되었습니다.",
+};
+
+// 폼 관련 메시지
+export const FORM_MESSAGES = {
+  REQUIRED_FIELDS: "필수 항목을 모두 입력해주세요.",
+  INVALID_FORMAT: "올바른 형식으로 입력해주세요.",
+  SUBMIT_SUCCESS: "제출이 완료되었습니다.",
+  SUBMIT_ERROR: "제출 중 오류가 발생했습니다.",
+  SAVE_SUCCESS: "저장되었습니다.",
+  SAVE_ERROR: "저장에 실패했습니다.",
 };

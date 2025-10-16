@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "카인포",
+  "name": "카인포 - 차량 정보 플랫폼 | 렌터카 리스 상담",
   "icons": [
     {
       "src": "favicon.ico",

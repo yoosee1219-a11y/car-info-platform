@@ -25,6 +25,10 @@ import CompareChild from "./components/CompareChild";
 import ComparePet from "./components/ComparePet";
 import CompareDriver from "./components/CompareDriver";
 
+// 새로운 차량 정보 컴포넌트
+import CarGrid from "./components/CarGrid";
+import CarDetail from "./components/CarDetail";
+
 // 메인 페이지 컴포넌트
 function MainPage() {
   const { posts, loading } = usePosts(6);
@@ -34,6 +38,10 @@ function MainPage() {
     <>
       <Header />
       <Hero />
+
+      {/* 🚗 새로운 차량 필터링 & 그리드 */}
+      <CarGrid />
+
       <QuickQuote />
       <InfoSection posts={posts} loading={loading} />
       <RecentlyViewedPosts />
@@ -51,6 +59,10 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<MainPage />} />
+
+          {/* 🚗 차량 상세 페이지 */}
+          <Route path="/car/:slug" element={<CarDetail />} />
+
           <Route path="/posts" element={<PostList />} />
           <Route path="/post/:id" element={<PostDetail />} />
           <Route path="/admin" element={<AdminWrapper />} />

@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import {
   CONSULTATION_FORM_DEFAULTS,
-  INSURANCE_TYPE_LIST,
+  CAR_BRAND_LIST,
+  SERVICE_TYPE_LIST,
+  AVAILABLE_TIME_LIST,
+  REGION_LIST,
   CONSULTATION_MESSAGES,
 } from "../constants";
 
@@ -16,8 +20,13 @@ function ConsultationSection({ onSubmit }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.phone) {
-      alert(CONSULTATION_MESSAGES.REQUIRED_FIELDS);
+    if (
+      !formData.name ||
+      !formData.phone ||
+      !formData.available_time ||
+      !formData.region
+    ) {
+      toast.error(CONSULTATION_MESSAGES.REQUIRED_FIELDS);
       return;
     }
 
@@ -33,7 +42,7 @@ function ConsultationSection({ onSubmit }) {
     <section className="consultation-section" id="consult">
       <div className="consultation-content">
         <h2 className="section-title" style={{ color: "white" }}>
-          🤝 전문가 상담 서비스
+          🚗 장기 렌터카/리스 상담
         </h2>
         <p
           style={{
@@ -42,7 +51,7 @@ function ConsultationSection({ onSubmit }) {
             textAlign: "center",
           }}
         >
-          복잡한 보험, 전문가와 함께 해결하세요
+          최적의 차량과 조건을 찾아드립니다
         </p>
 
         <form onSubmit={handleSubmit} className="consultation-form">
@@ -82,14 +91,66 @@ function ConsultationSection({ onSubmit }) {
           </div>
 
           <div className="form-group">
-            <label>보험 종류</label>
+            <label>희망 차량 브랜드</label>
             <select
-              name="insurance_type"
-              value={formData.insurance_type}
+              name="car_brand"
+              value={formData.car_brand}
               onChange={handleChange}
             >
-              {INSURANCE_TYPE_LIST.map((type) => (
+              {CAR_BRAND_LIST.map((brand) => (
+                <option key={brand}>{brand}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label>희망 차량 모델 (선택사항)</label>
+            <input
+              type="text"
+              name="car_model"
+              value={formData.car_model}
+              onChange={handleChange}
+              placeholder="예: 그랜저, 쏘나타, K5 등"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>서비스 종류</label>
+            <select
+              name="service_type"
+              value={formData.service_type}
+              onChange={handleChange}
+            >
+              {SERVICE_TYPE_LIST.map((type) => (
                 <option key={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label>통화 가능 시간 *</label>
+            <select
+              name="available_time"
+              value={formData.available_time}
+              onChange={handleChange}
+              required
+            >
+              {AVAILABLE_TIME_LIST.map((time) => (
+                <option key={time}>{time}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label>지역 *</label>
+            <select
+              name="region"
+              value={formData.region}
+              onChange={handleChange}
+              required
+            >
+              {REGION_LIST.map((region) => (
+                <option key={region}>{region}</option>
               ))}
             </select>
           </div>
@@ -100,7 +161,7 @@ function ConsultationSection({ onSubmit }) {
               name="message"
               value={formData.message}
               onChange={handleChange}
-              placeholder="상담받고 싶은 내용을 자유롭게 작성해주세요"
+              placeholder="차량이나 계약 조건에 대해 궁금하신 점을 자유롭게 작성해주세요"
             />
           </div>
 

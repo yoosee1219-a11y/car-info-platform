@@ -8,3 +8,6 @@ const supabaseAnonKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDUxOTI4MDAsImV4cCI6MTk2MDc2ODgwMH0.placeholder";
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// Supabase가 실제로 설정되어 있는지 여부 플래그 (placeholder면 미설정)
+export const isSupabaseConfigured = !supabaseUrl.includes("placeholder");
