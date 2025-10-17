@@ -1,24 +1,73 @@
+# 네이버 검색봇 (Yeti)
+User-agent: Yeti
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Crawl-delay: 1
+
+# 다음(카카오) 검색봇 (Daumoa)
+User-agent: Daumoa
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Crawl-delay: 1
+
+# 구글 검색봇 (Googlebot)
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Crawl-delay: 0.5
+
+# 구글 이미지 검색봇 (Googlebot-Image)
+User-agent: Googlebot-Image
+Allow: /images/
+Disallow: /admin/
+
+# 빙(Bing) 검색봇 (Bingbot)
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Crawl-delay: 1
+
+# 기타 모든 봇
 User-agent: *
 Allow: /
 
-# 주요 페이지
+# 주요 허용 페이지
 Allow: /car/
+Allow: /cars
 Allow: /post/
+Allow: /posts
 Allow: /compare/
-Allow: /admin
+Allow: /about
+Allow: /contact
 
-# 정적 파일
+# 정적 파일 허용
 Allow: /images/
 Allow: /favicon.ico
 Allow: /manifest.json
+Allow: /logo192.png
+Allow: /logo512.png
 
-# 차단할 경로
+# 차단할 경로 (보안 및 성능)
+Disallow: /admin/
 Disallow: /api/
 Disallow: /_next/
 Disallow: /static/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /test/
+Disallow: /dev/
 
 # 사이트맵 위치
 Sitemap: https://carinfo.co.kr/sitemap.xml
 
 # 크롤링 지연 (서버 부하 방지)
-Crawl-delay: 1
+# 네이버, 다음: 1초
+# 구글: 0.5초 (더 빠른 인덱싱)
